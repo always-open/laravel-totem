@@ -74,8 +74,7 @@ class Task extends TotemModel
     /**
      * Convert a string of command arguments and options to an array.
      *
-     * @param bool $console if true will convert arguments to non associative array
-     *
+     * @param  bool  $console  if true will convert arguments to non associative array
      * @return array
      */
     public function compileParameters($console = false)
@@ -198,13 +197,21 @@ class Task extends TotemModel
                     ->limit($this->auto_cleanup_num)
                     ->get()
                     ->min('id');
-                self::results()
-                    ->where('id', '<', $oldest_id)
-                    ->delete();
+                do {
+                    $rowsDeleted = self::results()
+                        ->where('id', '<', $oldest_id)
+                        ->limit(500)
+                        ->getQuery()
+                        ->delete();
+                } while ($rowsDeleted > 0);
             } else {
-                self::results()
-                    ->where('ran_at', '<', Carbon::now()->subDays($this->auto_cleanup_num - 1))
-                    ->delete();
+                do {
+                    $rowsDeleted = self::results()
+                        ->where('ran_at', '<', Carbon::now()->subDays($this->auto_cleanup_num - 1))
+                        ->limit(500)
+                        ->getQuery()
+                        ->delete();
+                } while ($rowsDeleted > 0);
             }
         }
     }
