@@ -19,12 +19,12 @@
     "php": "^8.1.0",
     "ext-json": "*",
     "doctrine/dbal": "^3.1",
-    "illuminate/bus": "^9.0|^10.0|^11.0",
-    "illuminate/console": "^9.0|^10.0|^11.0",
-    "illuminate/contracts": "^9.0|^10.0|^11.0",
-    "illuminate/database": "^9.0|^10.0|^11.0",
-    "illuminate/events": "^9.0|^10.0|^11.0",
-    "illuminate/notifications": "^9.0|^10.0|^11.0"
+    "illuminate/bus": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/console": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/contracts": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/database": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/events": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/notifications": "^9.0|^10.0|^11.0|^12.0"
   },
   "require-dev": {
     "mockery/mockery": "^1.0",
