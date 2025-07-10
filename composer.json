@@ -5,11 +5,15 @@
     "laravel",
     "schedule",
     "manager",
-    "Code Studio",
-    "totem"
+    "totem",
+    "cron"
   ],
   "license": "MIT",
   "authors": [
+    {
+      "name": "Quentin Schmick",
+      "email": "qschmick@gmail.com"
+    },
     {
       "name": "Roshan Gautam",
       "email": "roshan.gautam@hotmail.com"
@@ -46,9 +50,6 @@
   },
   "extra": {
     "component": "package",
-    "branch-alias": {
-      "dev-8.0": "8.0.x-dev"
-    },
     "laravel": {
       "providers": [
         "Studio\\Totem\\Providers\\TotemServiceProvider"

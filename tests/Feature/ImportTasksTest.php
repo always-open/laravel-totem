@@ -11,8 +11,7 @@ use Studio\Totem\Tests\TestCase;
 
 class ImportTasksTest extends TestCase
 {
-    /** @test */
-    public function it_imports_tasks_from_a_json_file()
+    public function test_it_imports_tasks_from_a_json_file()
     {
         Event::fake();
 
