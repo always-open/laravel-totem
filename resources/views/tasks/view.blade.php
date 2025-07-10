@@ -6,7 +6,7 @@
 @section('title')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <h5 class="uk-card-title uk-margin-remove">Task Details</h5>
-        <status-button :data-task="{{ $task }}" :data-exists="{{ $task->exists ? 'true' : 'false' }}" activate-url="{{route('totem.task.activate')}}" deactivate-url="{{route('totem.task.deactivate', $task)}}"></status-button>
+        <status-button :data-task="{{ $task }}" :data-exists="{{ $task->exists ? 'true' : 'false' }}" activate-url="{{route('totem.task.activate')}}" deactivate-url="{{route('totem.task.deactivate', ['totemTask' => $task])}}"></status-button>
     </div>
 @stop
 @section('main-panel-content')
@@ -86,15 +86,15 @@
 @section('main-panel-footer')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <span>
-            <a href="{{ route('totem.task.edit', $task) }}" class="uk-button uk-button-primary uk-button-small">Edit</a>
-            <form class="uk-display-inline" action="{{route('totem.task.delete', $task)}}" method="post">
+            <a href="{{ route('totem.task.edit', ['totemTask' => $task]) }}" class="uk-button uk-button-primary uk-button-small">Edit</a>
+            <form class="uk-display-inline" action="{{route('totem.task.delete', ['totemTask' => $task])}}" method="post">
                 {{ csrf_field() }}
                 {{ method_field('delete') }}
                 <button type="submit" class="uk-button uk-button-danger uk-button-small">Delete</button>
             </form>
             <a href="{{ route('totem.tasks.all') }}" class="uk-button uk-button-secondary uk-button-small">Cancel</a>
         </span>
-        <execute-button :data-task="{{ $task }}" url="{{route('totem.task.execute', $task)}}" button-class="uk-button-small uk-button-primary"></execute-button>
+        <execute-button :data-task="{{ $task }}" url="{{route('totem.task.execute', ['totemTask' => $task])}}" button-class="uk-button-small uk-button-primary"></execute-button>
     </div>
 @stop
 @section('additional-panels')

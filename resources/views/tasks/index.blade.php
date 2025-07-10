@@ -37,8 +37,8 @@
             @forelse($tasks as $task)
                 <tr is="task-row"
                     :data-task="{{$task}}"
-                    showHref="{{route('totem.task.view', $task)}}"
-                    executeHref="{{route('totem.task.execute', $task)}}">
+                    showHref="{{route('totem.task.view', ['totemTask' => $task])}}"
+                    executeHref="{{route('totem.task.execute', ['totemTask' => $task])}}">
                 </tr>
             @empty
                 <tr>

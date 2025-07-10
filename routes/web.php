@@ -18,15 +18,15 @@ Route::group(['prefix' => 'tasks'], function () {
     Route::get('export', 'ExportTasksController@index')->name('totem.tasks.export');
     Route::post('import', 'ImportTasksController@index')->name('totem.tasks.import');
 
-    Route::get('{totem-task}', 'TasksController@view')->name('totem.task.view');
+    Route::get('{totemTask}', 'TasksController@view')->name('totem.task.view');
 
-    Route::get('{totem-task}/edit', 'TasksController@edit')->name('totem.task.edit');
-    Route::post('{totem-task}/edit', 'TasksController@update');
+    Route::get('{totemTask}/edit', 'TasksController@edit')->name('totem.task.edit');
+    Route::post('{totemTask}/edit', 'TasksController@update');
 
-    Route::delete('{totem-task}', 'TasksController@destroy')->name('totem.task.delete');
+    Route::delete('{totemTask}', 'TasksController@destroy')->name('totem.task.delete');
 
     Route::post('status', 'ActiveTasksController@store')->name('totem.task.activate');
-    Route::delete('status/{id}', 'ActiveTasksController@destroy')->name('totem.task.deactivate');
+    Route::delete('status/{totemTask}', 'ActiveTasksController@destroy')->name('totem.task.deactivate');
 
-    Route::get('{totem-task}/execute', 'ExecuteTasksController@index')->name('totem.task.execute');
+    Route::get('{totemTask}/execute', 'ExecuteTasksController@index')->name('totem.task.execute');
 });

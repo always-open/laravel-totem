@@ -11,7 +11,7 @@ class ViewTaskTest extends TestCase
     {
         $this->signIn();
         $task = Task::factory()->create();
-        $response = $this->get(route('totem.task.view', $task));
+        $response = $this->get(route('totem.task.view', ['totemTask' => $task]));
         $response->assertStatus(200);
         $response->assertSee($task->description);
         $response->assertSee('Studio\Totem\Console\Commands\ListSchedule');
@@ -21,7 +21,7 @@ class ViewTaskTest extends TestCase
     public function test_guest_can_not_view_task()
     {
         $task = Task::factory()->create();
-        $response = $this->get(route('totem.task.view', $task));
+        $response = $this->get(route('totem.task.view', ['totemTask' => $task]));
         $response->assertStatus(403);
     }
 }
