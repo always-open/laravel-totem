@@ -146,7 +146,7 @@ class Task extends TotemModel
      *
      * @return Result|null
      */
-    public function getLastResultAttribute(): Result|null
+    public function getLastResultAttribute(): ?Result
     {
         return $this->results()->orderBy('id', 'desc')->first();
     }

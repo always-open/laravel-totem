@@ -17,22 +17,14 @@ Manage your `Laravel Schedule` from a pretty dashboard. Schedule your `Laravel C
 #### Compatiblity Matrix
 
 | <span align="left">Laravel</span> | <span align="left">Totem</span> |
-| :-------------------------------- | ------------------------------: |
+|:----------------------------------|--------------------------------:|
+| 12.x                              |                            11.x |
 | 11.x                              |                            11.x |
 | 10.x                              |                            10.x |
-| 9.x                               |                             9.x |
-| 8.x                               |                             8.x |
-| 7.x                               |                             7.x |
-| 6.x                               |                             6.x |
-| 5.8                               |                             5.x |
-| 5.7                               |                             4.x |
-| 5.6                               |                             3.x |
-| 5.5                               |                             2.x |
-| 5.4                               |                             1.x |
 
 #### Installing
 
-`Totem` requires Laravel v5.4 and above, please refer to the above table for compatability. Use composer to install totem to your Laravel project
+`Totem` requires Laravel v10 and above, please refer to the above table for compatability. Use composer to install totem to your Laravel project
 
 ```
 composer require studio/laravel-totem
