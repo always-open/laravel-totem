@@ -74,8 +74,8 @@ class ViewDashboardTest extends TestCase
     }
 
     /**
-     * @param int $task_count
-     * @param int $result_count
+     * @param  int  $task_count
+     * @param  int  $result_count
      * @return mixed
      */
     private function _get_task_with_results(int $task_count = 1, int $result_count = 1): mixed
