@@ -8,8 +8,7 @@ use Studio\Totem\Totem;
 
 class AuthTest extends TestCase
 {
-    /** @test */
-    public function auth_callback_works()
+    public function test_auth_callback_works()
     {
         $this->assertFalse(Totem::check('roshan'));
 
@@ -22,8 +21,7 @@ class AuthTest extends TestCase
         $this->assertFalse(Totem::check(null));
     }
 
-    /** @test */
-    public function auth_middleware_works()
+    public function test_auth_middleware_works()
     {
         Totem::auth(function () {
             return true;
@@ -42,10 +40,7 @@ class AuthTest extends TestCase
         $this->assertEquals('response', $response);
     }
 
-    /**
-     * @test
-     */
-    public function auth_middleware_responds_with_403_on_failure()
+    public function test_auth_middleware_responds_with_403_on_failure()
     {
         $this->expectException('\Symfony\Component\HttpKernel\Exception\HttpException');
         Totem::auth(function () {

@@ -8,8 +8,7 @@ use Studio\Totem\Tests\TestCase;
 
 class ExportTasksTest extends TestCase
 {
-    /** @test */
-    public function it_exports_tasks_as_json()
+    public function test_it_exports_tasks_as_json()
     {
         $tasks = Task::factory()->count(5)->create();
 
