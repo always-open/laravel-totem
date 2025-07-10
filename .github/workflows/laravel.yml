@@ -31,7 +31,7 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
         coverage: none
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.composer/cache/files
         key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
