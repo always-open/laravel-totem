@@ -40,7 +40,7 @@ class ActiveTasksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Task $task
+     * @param  Task  $task
      * @return JsonResponse
      */
     public function destroy(Task $task): JsonResponse
