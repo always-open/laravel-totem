@@ -5,6 +5,7 @@ namespace Studio\Totem\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Studio\Totem\Contracts\TaskInterface;
+use Studio\Totem\Task;
 
 class ActiveTasksController extends Controller
 {
@@ -39,12 +40,12 @@ class ActiveTasksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Task $task
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Task $task): JsonResponse
     {
-        $task = $this->tasks->deactivate($id);
+        $task = $this->tasks->deactivate($task->id);
 
         return response()->json($task, 200);
     }
