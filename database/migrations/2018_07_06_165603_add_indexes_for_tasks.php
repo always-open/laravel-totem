@@ -48,19 +48,22 @@ class AddIndexesForTasks extends TotemMigration
      */
     public function down()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
-                $table->dropForeign('task_id_fk');
-            });
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            Schema::connection(TOTEM_DATABASE_CONNECTION)
+                ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
+                    $table->dropForeign('task_id_fk');
+                });
+
+            Schema::connection(TOTEM_DATABASE_CONNECTION)
+                ->table(TOTEM_TABLE_PREFIX.'task_frequencies', function (Blueprint $table) {
+                    $table->dropForeign('task_frequencies_task_id_fk');
+                });
+        }
+
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
                 $table->dropIndex('task_results_task_id_idx');
                 $table->dropIndex('task_results_ran_at_idx');
-            });
-
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'task_frequencies', function (Blueprint $table) {
-                $table->dropForeign('task_frequencies_task_id_fk');
             });
 
         Schema::connection(TOTEM_DATABASE_CONNECTION)
