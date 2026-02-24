@@ -9,3 +9,4 @@ _ide_helper.php
 .phpunit.result.cached
 /.ai
 /.claude
+/.phpunit.cache/
