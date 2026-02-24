@@ -11,6 +11,12 @@
                 <span class="uk-vertical-align-middle">Tasks</span>
             </a>
         </li>
+        <li class="{{ request()->routeIs('totem.upcoming') ? 'uk-active' : '' }}">
+            <a href="{{route('totem.upcoming')}}" class="uk-flex uk-flex-middle">
+                <span uk-icon="icon: calendar; ratio: 1" class="uk-visible@m uk-margin-small-right"></span>
+                <span class="uk-vertical-align-middle">Upcoming</span>
+            </a>
+        </li>
     </ul>
     <hr>
 </aside>
