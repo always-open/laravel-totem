@@ -2,27 +2,11 @@
 
 namespace Studio\Totem\Listeners;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Cache;
 use Studio\Totem\Events\Event;
 
 class BustCacheImmediately
 {
-    /**
-     * @var Container
-     */
-    protected Container $app;
-
-    /**
-     * Create the event listener.
-     *
-     * @param  Container  $app
-     */
-    public function __construct(Container $app)
-    {
-        $this->app = $app;
-    }
-
     /**
      * Handle the event.
      *

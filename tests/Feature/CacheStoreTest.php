@@ -66,6 +66,7 @@ class CacheStoreTest extends TestCase
 
         $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.all'));
         $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.active'));
+        $this->assertFalse(Cache::store('totem_store')->has('totem.task.'.$task->id));
     }
 
     public function test_is_enabled_uses_configured_cache_store()
