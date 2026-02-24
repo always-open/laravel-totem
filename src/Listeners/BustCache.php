@@ -2,6 +2,7 @@
 
 namespace Studio\Totem\Listeners;
 
+use Illuminate\Support\Facades\Cache;
 use Studio\Totem\Events\Event;
 
 class BustCache extends Listener
@@ -23,11 +24,13 @@ class BustCache extends Listener
      */
     protected function clear(Event $event)
     {
+        $cache = Cache::store(config('totem.cache_store'));
+
         if ($event->task) {
-            $this->app['cache']->forget('totem.task.'.$event->task->id);
+            $cache->forget('totem.task.'.$event->task->id);
         }
 
-        $this->app['cache']->forget('totem.tasks.all');
-        $this->app['cache']->forget('totem.tasks.active');
+        $cache->forget('totem.tasks.all');
+        $cache->forget('totem.tasks.active');
     }
 }

@@ -51,4 +51,32 @@ class CacheStoreTest extends TestCase
         $this->assertTrue(Cache::store('totem_store')->has('totem.task.'.$task->id));
         $this->assertFalse(Cache::store('array')->has('totem.task.'.$task->id));
     }
+
+    public function test_bust_cache_clears_from_configured_store()
+    {
+        config(['totem.cache_store' => 'totem_store']);
+
+        Cache::store('totem_store')->forever('totem.tasks.all', 'primed');
+        Cache::store('totem_store')->forever('totem.tasks.active', 'primed');
+
+        $task = \Studio\Totem\Task::factory()->create();
+        Cache::store('totem_store')->forever('totem.task.'.$task->id, 'primed');
+
+        \Studio\Totem\Events\Deleting::dispatch($task->id);
+
+        $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.all'));
+        $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.active'));
+    }
+
+    public function test_is_enabled_uses_configured_cache_store()
+    {
+        config(['totem.cache_store' => 'totem_store']);
+
+        Cache::store('totem_store')->forget('totem.table.tasks');
+
+        \Studio\Totem\Totem::isEnabled();
+
+        $this->assertTrue(Cache::store('totem_store')->has('totem.table.tasks'));
+        $this->assertFalse(Cache::store('array')->has('totem.table.tasks'));
+    }
 }

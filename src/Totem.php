@@ -95,12 +95,14 @@ class Totem
     public static function isEnabled(): bool
     {
         try {
-            if (Cache::get('totem.table.'.TOTEM_TABLE_PREFIX.'tasks')) {
+            $cache = Cache::store(config('totem.cache_store'));
+
+            if ($cache->get('totem.table.'.TOTEM_TABLE_PREFIX.'tasks')) {
                 return true;
             }
 
             if (Schema::hasTable(TOTEM_TABLE_PREFIX.'tasks')) {
-                Cache::forever('totem.table.'.TOTEM_TABLE_PREFIX.'tasks', true);
+                $cache->forever('totem.table.'.TOTEM_TABLE_PREFIX.'tasks', true);
 
                 return true;
             }
