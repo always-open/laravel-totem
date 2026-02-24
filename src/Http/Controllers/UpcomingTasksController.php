@@ -36,6 +36,10 @@ class UpcomingTasksController extends Controller
             ? Carbon::parse($request->input('start'))
             : Carbon::now()->startOfMinute();
 
+        if ($start->lt(Carbon::now()->startOfMinute())) {
+            $start = Carbon::now()->startOfMinute();
+        }
+
         $days = (int) $request->input('days', 1);
         $days = in_array($days, [1, 3]) ? $days : 1;
         $end = $start->copy()->addDays($days);
@@ -63,6 +67,12 @@ class UpcomingTasksController extends Controller
             } catch (\Exception $e) {
                 logger()->warning('Totem: could not parse cron expression for task '.$task->id.': '.$e->getMessage());
             }
+        });
+
+        usort($events, function ($a, $b) {
+            $time = $a['scheduled_at'] <=> $b['scheduled_at'];
+
+            return $time !== 0 ? $time : $a['command'] <=> $b['command'];
         });
 
         return response()->json([

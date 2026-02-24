@@ -62,17 +62,26 @@
                     class="totem-calendar__cell"
                 >
                     <div
-                        v-for="(event, idx) in eventsForDayAndHour(day.date, hour - 1)"
-                        :key="event.task_id + '-' + event.scheduled_at + '-' + idx"
-                        class="totem-calendar__event"
-                        :title="event.description + ' (' + event.command + ')'"
+                        v-for="group in groupedEventsForDayAndHour(day.date, hour - 1)"
+                        :key="group.minute"
+                        class="totem-calendar__minute-group"
                     >
-                        <span class="totem-calendar__event-time">{{ formatTime(event.scheduled_at) }}</span>
-                        <span class="totem-calendar__event-desc">{{ truncate(event.description) }}</span>
+                        <a
+                            v-for="(event, idx) in group.events"
+                            :key="event.task_id + '-' + event.scheduled_at + '-' + idx"
+                            class="totem-calendar__event"
+                            :style="{ background: commandColor(event.command) }"
+                            :title="event.description + ' (' + event.command + ')'"
+                            :href="taskBaseUrl.replace(/\/$/, '') + '/' + event.task_id"
+                        >
+                            <span class="totem-calendar__event-time">{{ formatTime(event.scheduled_at) }}</span>
+                            <span class="totem-calendar__event-desc">{{ truncate(event.description) }}</span>
+                        </a>
                     </div>
                 </div>
             </template>
         </div>
+
     </div>
 </template>
 
@@ -85,16 +94,27 @@
                 type: String,
                 required: true,
             },
+            taskBaseUrl: {
+                type: String,
+                required: true,
+            },
         },
 
         data() {
+            const params = new URLSearchParams(window.location.search);
+            const daysParam = parseInt(params.get('days'), 10);
+            const days = [1, 3].includes(daysParam) ? daysParam : 1;
+            const startParam = params.get('start');
+            const currentStart = startParam && moment(startParam).isValid()
+                ? moment(startParam).startOf('day').toDate()
+                : moment().startOf('day').toDate();
             return {
-                days: 1,
-                currentStart: moment().startOf('hour').toDate(),
+                days,
+                currentStart,
                 events: [],
                 loading: false,
                 error: null,
-                _fetchGen: 0,
+                fetchGen: 0,
             };
         },
 
@@ -141,39 +161,54 @@
             },
 
             resetToNow() {
-                this.currentStart = moment().startOf('hour').toDate();
+                this.currentStart = moment().startOf('day').toDate();
                 this.fetchEvents();
             },
 
+            syncUrl() {
+                const start = moment(this.currentStart).format('YYYY-MM-DD');
+                const end = moment(this.currentStart).add(this.days, 'days').format('YYYY-MM-DD');
+                const params = new URLSearchParams({ start, end, days: this.days });
+                history.replaceState(null, '', '?' + params.toString());
+            },
+
             fetchEvents() {
-                const gen = ++this._fetchGen;
+                this.syncUrl();
+                const gen = ++this.fetchGen;
                 this.loading = true;
                 this.error = null;
                 const start = moment(this.currentStart).format();
 
                 axios.get(this.eventsUrl, { params: { start: start, days: this.days } })
                     .then(response => {
-                        if (gen === this._fetchGen) {
+                        if (gen === this.fetchGen) {
                             this.events = response.data.events;
                         }
                     })
                     .catch(() => {
-                        if (gen === this._fetchGen) {
+                        if (gen === this.fetchGen) {
                             this.error = 'Failed to load upcoming events. Please try again.';
                         }
                     })
                     .finally(() => {
-                        if (gen === this._fetchGen) {
+                        if (gen === this.fetchGen) {
                             this.loading = false;
                         }
                     });
             },
 
-            eventsForDayAndHour(date, hour) {
-                return this.events.filter(function (event) {
+            groupedEventsForDayAndHour(date, hour) {
+                const groups = {};
+                this.events.forEach(function (event) {
                     const m = moment(event.scheduled_at);
-                    return m.format('YYYY-MM-DD') === date && m.hour() === hour;
+                    if (m.format('YYYY-MM-DD') !== date || m.hour() !== hour) return;
+                    const minute = m.minute();
+                    if (!groups[minute]) groups[minute] = [];
+                    groups[minute].push(event);
                 });
+                return Object.keys(groups)
+                    .sort(function (a, b) { return a - b; })
+                    .map(function (minute) { return { minute: minute, events: groups[minute] }; });
             },
 
             formatHour(hour) {
@@ -184,9 +219,33 @@
                 return moment(isoString).format('HH:mm');
             },
 
+            commandColor(command) {
+                const palette = [
+                    '#1d4ed8', // blue       6.70:1
+                    '#0e7490', // cyan       5.36:1
+                    '#0f766e', // teal       5.47:1
+                    '#15803d', // green      5.02:1
+                    '#065f46', // emerald    7.68:1
+                    '#b45309', // amber      5.02:1
+                    '#c2410c', // orange     5.18:1
+                    '#b91c1c', // red        6.47:1
+                    '#9f1239', // rose       8.02:1
+                    '#be185d', // pink       6.04:1
+                    '#7e22ce', // purple     6.98:1
+                    '#4338ca', // indigo     7.90:1
+                ];
+                let hash = 0;
+                const str = command || '';
+                for (let i = 0; i < str.length; i++) {
+                    hash = (hash << 5) - hash + str.charCodeAt(i);
+                    hash |= 0;
+                }
+                return palette[Math.abs(hash) % palette.length];
+            },
+
             truncate(text) {
                 if (!text) return '';
-                return text.length > 20 ? text.substring(0, 20) + '\u2026' : text;
+                return text.length > 50 ? text.substring(0, 50) + '\u2026' : text;
             },
         },
     };
@@ -234,12 +293,18 @@
         vertical-align: top;
     }
 
+    .totem-calendar__minute-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        margin-bottom: 2px;
+    }
+
     .totem-calendar__event {
-        background: #1e87f0;
         color: white;
+        text-decoration: none;
         border-radius: 3px;
         padding: 2px 4px;
-        margin-bottom: 2px;
         font-size: 11px;
         overflow: hidden;
         white-space: nowrap;
@@ -253,4 +318,5 @@
     .totem-calendar__event-desc {
         opacity: 0.9;
     }
+
 </style>

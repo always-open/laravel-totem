@@ -14,6 +14,7 @@
     "lodash": "^4.16.2",
     "moment": "^2.10.6",
     "phpunserialize": "1.*",
+    "puppeteer": "^24.37.5",
     "uikit": "^3.0.0-rc.11",
     "vue": "^2.2.0",
     "xml-loader": "1.1.0"

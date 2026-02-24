@@ -40,7 +40,8 @@
     "psr-4": {
       "Studio\\Totem\\": "src/",
       "Studio\\Totem\\Tests\\": "tests/",
-      "Database\\Factories\\": "database/factories/"
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
     },
     "files": [
       "src/helpers.php"
