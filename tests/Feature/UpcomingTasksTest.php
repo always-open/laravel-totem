@@ -39,7 +39,7 @@ class UpcomingTasksTest extends TestCase
 
         $response = $this->getJson(route('totem.upcoming.events', [
             'start' => '2026-01-01T00:00:00+00:00',
-            'days'  => 1,
+            'days' => 1,
         ]));
 
         $response->assertStatus(200)
@@ -54,7 +54,7 @@ class UpcomingTasksTest extends TestCase
 
         $response = $this->getJson(route('totem.upcoming.events', [
             'start' => '2026-01-01T00:00:00+00:00',
-            'days'  => 1,
+            'days' => 1,
         ]));
 
         $response->assertStatus(200);
@@ -69,12 +69,12 @@ class UpcomingTasksTest extends TestCase
 
         $inactive = Task::factory()->create([
             'expression' => '0 8 * * *',
-            'is_active'  => false,
+            'is_active' => false,
         ]);
 
         $response = $this->getJson(route('totem.upcoming.events', [
             'start' => '2026-01-01T00:00:00+00:00',
-            'days'  => 1,
+            'days' => 1,
         ]));
 
         $taskIds = collect($response->json('events'))->pluck('task_id');
@@ -89,7 +89,7 @@ class UpcomingTasksTest extends TestCase
 
         $response = $this->getJson(route('totem.upcoming.events', [
             'start' => '2026-01-01T00:00:00+00:00',
-            'days'  => 1,
+            'days' => 1,
         ]));
 
         $events = collect($response->json('events'))->where('task_id', $task->id);
