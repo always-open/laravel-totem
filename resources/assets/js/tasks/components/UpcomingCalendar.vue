@@ -35,7 +35,7 @@
         </div>
 
         <!-- Error -->
-        <div v-if="error" class="uk-alert-danger" uk-alert>
+        <div v-else-if="error" class="uk-alert-danger" uk-alert>
             <p>{{ error }}</p>
         </div>
 
@@ -94,6 +94,7 @@
                 events: [],
                 loading: false,
                 error: null,
+                _fetchGen: 0,
             };
         },
 
@@ -145,19 +146,26 @@
             },
 
             fetchEvents() {
+                const gen = ++this._fetchGen;
                 this.loading = true;
                 this.error = null;
                 const start = moment(this.currentStart).toISOString();
 
                 axios.get(this.eventsUrl, { params: { start: start, days: this.days } })
                     .then(response => {
-                        this.events = response.data.events;
+                        if (gen === this._fetchGen) {
+                            this.events = response.data.events;
+                        }
                     })
                     .catch(() => {
-                        this.error = 'Failed to load upcoming events. Please try again.';
+                        if (gen === this._fetchGen) {
+                            this.error = 'Failed to load upcoming events. Please try again.';
+                        }
                     })
                     .finally(() => {
-                        this.loading = false;
+                        if (gen === this._fetchGen) {
+                            this.loading = false;
+                        }
                     });
             },
 
