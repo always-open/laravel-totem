@@ -56,6 +56,24 @@ php artisan totem:assets
 
 Totems' tables use generic names which may conflict with existing tables in a project. To alleviate this the `.env` param `TOTEM_TABLE_PREFIX` can be set which will apply a prefix to all of Totems tables and their models.
 
+##### Cache Store
+
+By default Totem uses your application's default cache store. In environments where UI servers and background worker servers use separate cache clusters (e.g. different Redis instances), Totem's cache can become inconsistent — a bust event on one server won't clear the cache on the other.
+
+Set `TOTEM_CACHE_STORE` to a named store from your `config/cache.php` that is accessible by all servers:
+
+```
+TOTEM_CACHE_STORE=redis-shared
+```
+
+Setting it to `array` disables cache persistence entirely (each request hits the database):
+
+```
+TOTEM_CACHE_STORE=array
+```
+
+Leaving it unset uses your application's default cache store (existing behaviour).
+
 #### Updating
 
 Please republish totem assets after updating totem to a new version
