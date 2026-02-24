@@ -29,7 +29,7 @@ class UpcomingTasksController extends Controller
     {
         $request->validate([
             'start' => ['nullable', 'date'],
-            'days'  => ['nullable', 'integer', 'in:1,3'],
+            'days' => ['nullable', 'integer', 'in:1,3'],
         ]);
 
         $start = $request->filled('start')
@@ -53,9 +53,9 @@ class UpcomingTasksController extends Controller
                         break;
                     }
                     $events[] = [
-                        'task_id'      => $task->id,
-                        'description'  => $task->description,
-                        'command'      => $task->command,
+                        'task_id' => $task->id,
+                        'description' => $task->description,
+                        'command' => $task->command,
                         'scheduled_at' => $next->toIso8601String(),
                     ];
                     $cursor = $next;
@@ -66,9 +66,9 @@ class UpcomingTasksController extends Controller
         });
 
         return response()->json([
-            'start'  => $start->toIso8601String(),
-            'end'    => $end->toIso8601String(),
-            'days'   => $days,
+            'start' => $start->toIso8601String(),
+            'end' => $end->toIso8601String(),
+            'days' => $days,
             'events' => $events,
         ]);
     }
