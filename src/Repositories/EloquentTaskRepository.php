@@ -43,6 +43,16 @@ class EloquentTaskRepository implements TaskInterface
     }
 
     /**
+     * Get the cache store instance configured for Totem.
+     *
+     * @return \Illuminate\Cache\Repository
+     */
+    private function cache(): \Illuminate\Contracts\Cache\Repository
+    {
+        return Cache::store(config('totem.cache_store'));
+    }
+
+    /**
      * Find a task by id.
      *
      * @param  int|Task  $id
@@ -54,7 +64,7 @@ class EloquentTaskRepository implements TaskInterface
             return $id;
         }
 
-        return Cache::rememberForever('totem.task.'.$id, function () use ($id) {
+        return $this->cache()->rememberForever('totem.task.'.$id, function () use ($id) {
             return Task::query()->with('frequencies')->find($id);
         });
     }
@@ -66,7 +76,7 @@ class EloquentTaskRepository implements TaskInterface
      */
     public function findAll(): Collection
     {
-        return Cache::rememberForever('totem.tasks.all', function () {
+        return $this->cache()->rememberForever('totem.tasks.all', function () {
             return Task::query()->with('frequencies')->get();
         });
     }
@@ -78,7 +88,7 @@ class EloquentTaskRepository implements TaskInterface
      */
     public function findAllActive(): Collection
     {
-        return Cache::rememberForever('totem.tasks.active', function () {
+        return $this->cache()->rememberForever('totem.tasks.active', function () {
             return $this->findAll()->filter(function ($task) {
                 return $task->is_active;
             });
@@ -209,12 +219,12 @@ class EloquentTaskRepository implements TaskInterface
      */
     public function import($input): void
     {
-        Cache::forget('totem.tasks.all');
-        Cache::forget('totem.tasks.active');
+        $this->cache()->forget('totem.tasks.all');
+        $this->cache()->forget('totem.tasks.active');
 
         collect(json_decode(Arr::get($input, 'content')))
             ->each(function ($data) {
-                Cache::forget('totem.task.'.$data->id);
+                $this->cache()->forget('totem.task.'.$data->id);
 
                 $task = $this->find($data->id);
 

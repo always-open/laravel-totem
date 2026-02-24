@@ -234,4 +234,6 @@ return [
         'enabled' => env('TOTEM_BROADCASTING_ENABLED', true),
         'channel' => env('TOTEM_BROADCASTING_CHANNEL', 'task.events'),
     ],
+
+    'cache_store' => env('TOTEM_CACHE_STORE', null),
 ];
