@@ -12,6 +12,7 @@ import ExecuteButton from './tasks/components/ExecuteButton.vue';
 import ImportButton from './tasks/components/ImportButton'
 import CommandList from './tasks/components/CommandList'
 import ClickToClose from "./components/ClickToClose";
+import UpcomingCalendar from './tasks/components/UpcomingCalendar';
 
 Promise.delay = function (time) {
   return new Promise((resolve, reject) => {
@@ -56,7 +57,8 @@ new Vue({
     'task-output' : TaskOutput,
     'task-row': TaskRow,
     'click-to-close' : ClickToClose,
-    'command-list' : CommandList
+    'command-list' : CommandList,
+    'upcoming-calendar': UpcomingCalendar,
   },
   mounted() {
     UIkit.use(Icons);

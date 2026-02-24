@@ -18,6 +18,9 @@ Route::group(['prefix' => 'tasks'], function () {
     Route::get('export', 'ExportTasksController@index')->name('totem.tasks.export');
     Route::post('import', 'ImportTasksController@index')->name('totem.tasks.import');
 
+    Route::get('upcoming', 'UpcomingTasksController@index')->name('totem.upcoming');
+    Route::get('upcoming/events', 'UpcomingTasksController@events')->name('totem.upcoming.events');
+
     Route::get('{totemTask}', 'TasksController@view')->name('totem.task.view');
 
     Route::get('{totemTask}/edit', 'TasksController@edit')->name('totem.task.edit');

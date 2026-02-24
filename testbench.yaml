@@ -1,0 +1,25 @@
+laravel: '@testbench'
+
+providers:
+  - Studio\Totem\Providers\TotemServiceProvider
+
+migrations:
+  - database/migrations
+
+seeders:
+  - Database\Seeders\ScreenshotSeeder
+
+workbench:
+  start: '/totem'
+  install: true
+  health: false
+  discovers:
+    web: true
+    api: false
+    commands: true
+    components: false
+    factories: true
+    views: false
+  build:
+    - create-sqlite-db
+    - migrate-fresh
