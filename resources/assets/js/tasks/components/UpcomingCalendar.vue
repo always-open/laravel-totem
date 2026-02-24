@@ -149,7 +149,7 @@
                 const gen = ++this._fetchGen;
                 this.loading = true;
                 this.error = null;
-                const start = moment(this.currentStart).toISOString();
+                const start = moment(this.currentStart).format();
 
                 axios.get(this.eventsUrl, { params: { start: start, days: this.days } })
                     .then(response => {
@@ -185,6 +185,7 @@
             },
 
             truncate(text) {
+                if (!text) return '';
                 return text.length > 20 ? text.substring(0, 20) + '\u2026' : text;
             },
         },

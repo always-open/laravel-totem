@@ -2,11 +2,14 @@
 
 namespace Studio\Totem\Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Studio\Totem\Task;
 use Studio\Totem\Tests\TestCase;
 
 class UpcomingTasksTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);

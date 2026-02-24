@@ -27,7 +27,12 @@ class UpcomingTasksController extends Controller
 
     public function events(Request $request): JsonResponse
     {
-        $start = $request->has('start')
+        $request->validate([
+            'start' => ['nullable', 'date'],
+            'days'  => ['nullable', 'integer', 'in:1,3'],
+        ]);
+
+        $start = $request->filled('start')
             ? Carbon::parse($request->input('start'))
             : Carbon::now()->startOfMinute();
 
@@ -44,7 +49,7 @@ class UpcomingTasksController extends Controller
 
                 while (true) {
                     $next = Carbon::instance($cron->getNextRunDate($cursor));
-                    if ($next >= $end) {
+                    if ($next >= $end || $next <= $cursor) {
                         break;
                     }
                     $events[] = [
@@ -56,7 +61,7 @@ class UpcomingTasksController extends Controller
                     $cursor = $next;
                 }
             } catch (\Exception $e) {
-                // Skip tasks with unparseable cron expressions
+                logger()->warning('Totem: could not parse cron expression for task '.$task->id.': '.$e->getMessage());
             }
         });
 
