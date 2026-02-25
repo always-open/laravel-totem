@@ -119,7 +119,7 @@ class TotemServiceProvider extends ServiceProvider
         });
     }
 
-    private function scheduleTotemTasks(Schedule $schedule): void
+    public function scheduleTotemTasks(Schedule $schedule): void
     {
         $tasks = app('totem.tasks')->findAllActive();
 
