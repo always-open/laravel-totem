@@ -72,7 +72,7 @@ class Task extends TotemModel
      */
     public function getUpcomingAttribute(): string
     {
-        return CronExpression::factory($this->getCronExpression())->getNextRunDate()->format('Y-m-d H:i:s');
+        return (new CronExpression($this->getCronExpression()))->getNextRunDate()->format('Y-m-d H:i:s');
     }
 
     /**
