@@ -2,14 +2,18 @@
 
 namespace Studio\Totem\Providers;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
 use Studio\Totem\Console\Commands\PublishAssets;
 use Studio\Totem\Contracts\TaskInterface;
+use Studio\Totem\Events\Executed;
+use Studio\Totem\Events\Executing;
 use Studio\Totem\Repositories\EloquentTaskRepository;
 use Studio\Totem\Task;
+use Studio\Totem\Totem;
 
 class TotemServiceProvider extends ServiceProvider
 {
@@ -24,6 +28,7 @@ class TotemServiceProvider extends ServiceProvider
         $this->defineAssetPublishing();
         $this->registerRoutes();
         $this->registerRouteBind();
+        $this->registerSchedule();
     }
 
     /**
@@ -46,7 +51,6 @@ class TotemServiceProvider extends ServiceProvider
         $this->app->bindIf('totem.tasks', EloquentTaskRepository::class, true);
         $this->app->alias('totem.tasks', TaskInterface::class);
         $this->app->register(TotemEventServiceProvider::class);
-        $this->app->register(ConsoleServiceProvider::class);
     }
 
     /**
@@ -103,6 +107,48 @@ class TotemServiceProvider extends ServiceProvider
                 ->rememberForever('totem.task.'.$value, function () use ($value) {
                     return Task::query()->with('frequencies')->find($value) ?? abort(404);
                 });
+        });
+    }
+
+    private function registerSchedule(): void
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            if (Totem::isEnabled()) {
+                $this->scheduleTotemTasks($schedule);
+            }
+        });
+    }
+
+    private function scheduleTotemTasks(Schedule $schedule): void
+    {
+        $tasks = app('totem.tasks')->findAllActive();
+
+        $tasks->each(function ($task) use ($schedule) {
+            $event = $schedule->command($task->command, $task->compileParameters(true));
+
+            $event->cron($task->getCronExpression())
+                ->name($task->description)
+                ->timezone($task->timezone)
+                ->before(function () use ($task, $event) {
+                    $event->start = microtime(true);
+                    Executing::dispatch($task);
+                })
+                ->thenWithOutput(function ($output) use ($event, $task) {
+                    Executed::dispatch($task, $event->start ?? microtime(true), $output);
+                });
+
+            if ($task->dont_overlap) {
+                $event->withoutOverlapping();
+            }
+            if ($task->run_in_maintenance) {
+                $event->evenInMaintenanceMode();
+            }
+            if ($task->run_on_one_server && in_array(config('cache.default'), ['memcached', 'redis', 'database', 'dynamodb'])) {
+                $event->onOneServer();
+            }
+            if ($task->run_in_background) {
+                $event->runInBackground();
+            }
         });
     }
 }
