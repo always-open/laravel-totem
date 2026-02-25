@@ -16,7 +16,10 @@ export default defineConfig({
         cssCodeSplit: false,
         rollupOptions: {
             output: {
-                assetFileNames: '../css/components.css',
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name?.endsWith('.css')) return '../css/components.css';
+                    return '[name][extname]';
+                },
             },
         },
     },
