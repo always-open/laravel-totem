@@ -6,7 +6,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Studio\Totem\Events\Activated;
 use Studio\Totem\Events\Created;
 use Studio\Totem\Events\Deactivated;
-use Studio\Totem\Events\Deleted;
 use Studio\Totem\Events\Deleting;
 use Studio\Totem\Events\Updated;
 use Studio\Totem\Listeners\BuildCache;
