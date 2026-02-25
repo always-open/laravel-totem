@@ -1,5 +1,5 @@
 <script>
-import { h, onMounted, onUnmounted, useSlots } from 'vue';
+import { onMounted, onUnmounted, useSlots } from 'vue';
 
 export default {
     name: 'ClickToClose',
