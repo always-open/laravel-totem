@@ -108,6 +108,7 @@ class EloquentTaskRepository implements TaskInterface
         Creating::dispatch($input);
 
         $task->fill(Arr::only($input, $task->getFillable()))->save();
+        $task->afterSave($input);
 
         Created::dispatch($task);
 
@@ -128,6 +129,7 @@ class EloquentTaskRepository implements TaskInterface
         Updating::dispatch($input, $task);
 
         $task->fill(Arr::only($input, $task->getFillable()))->save();
+        $task->afterSave($input);
 
         Updated::dispatch($task);
 

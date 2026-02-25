@@ -4,15 +4,11 @@ namespace Studio\Totem\Traits;
 
 use Closure;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Studio\Totem\Frequency;
 use Studio\Totem\Task;
-
-use function json_decode;
-use function request;
 
 trait HasFrequencies
 {
@@ -35,12 +31,8 @@ trait HasFrequencies
     /**
      * Boot HasFrequencies Trait.
      */
-    public static function bootHasFrequencies()
+    public static function bootHasFrequencies(): void
     {
-        static::saved(function ($model) {
-            $model->afterSave();
-        });
-
         static::deleting(function ($model) {
             $model->beforeDelete();
         });
@@ -51,10 +43,8 @@ trait HasFrequencies
      * update or create the frequencies included in input else delete the frequency. If the type is not frequency and
      * the task in question has frequencies saved in databased, delete them all.
      */
-    public function afterSave()
+    public function afterSave(array $input = []): void
     {
-        $input = $this->processData();
-
         if (isset($input['type'])) {
             if ($input['type'] == 'frequency') {
                 foreach ($this->frequencies as $frequency) {
@@ -166,35 +156,5 @@ trait HasFrequencies
     public function between($startTime, $endTime): static
     {
         return $this->when($this->inTimeInterval($startTime, $endTime));
-    }
-
-    /**
-     * Process input data. If its an import action we must find out if the imported json has frequencies or not and
-     * prepare data accordingly.
-     *
-     * @throws FileNotFoundException
-     */
-    private function processData(): array
-    {
-        $data = request()->all();
-
-        if (! request()->hasFile('tasks')) {
-            return $data;
-        }
-
-        $task = collect(json_decode(request()->file('tasks')->get()))
-            ->filter(function ($task) {
-                return $task->id === $this->id;
-            })
-            ->first();
-
-        if ($task && ($task->frequencies ?? false)) {
-            $data['type'] = 'frequency';
-            $data['frequencies'] = collect($task->frequencies)->map(function ($frequency) {
-                return (array) $frequency;
-            })->toArray();
-        }
-
-        return $data;
     }
 }
