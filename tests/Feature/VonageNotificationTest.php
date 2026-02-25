@@ -2,6 +2,8 @@
 
 namespace Studio\Totem\Tests\Feature;
 
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Studio\Totem\Notifications\TaskCompleted;
 use Studio\Totem\Task;
 use Studio\Totem\Tests\TestCase;
@@ -38,5 +40,45 @@ class VonageNotificationTest extends TestCase
         $message = $notification->toVonage($task);
 
         $this->assertStringContainsString('My Task', $message->content);
+    }
+
+    public function test_mail_channel_used_when_email_set(): void
+    {
+        $task = Task::factory()->create(['notification_email_address' => 'test@example.com']);
+        $notification = new TaskCompleted('output');
+
+        $this->assertContains('mail', $notification->via($task));
+    }
+
+    public function test_slack_channel_used_when_webhook_set(): void
+    {
+        $task = Task::factory()->create(['notification_slack_webhook' => 'https://hooks.slack.com/test']);
+        $notification = new TaskCompleted('output');
+
+        $this->assertContains('slack', $notification->via($task));
+    }
+
+    public function test_to_mail_uses_task_description_as_subject_and_includes_output(): void
+    {
+        $task = Task::factory()->create(['description' => 'My Task']);
+        $notification = new TaskCompleted('Task ran successfully');
+
+        $message = $notification->toMail($task);
+
+        $this->assertInstanceOf(MailMessage::class, $message);
+        $this->assertSame('My Task', $message->subject);
+        $this->assertStringContainsString('Task ran successfully', implode(' ', $message->introLines));
+    }
+
+    public function test_to_slack_includes_task_description_in_attachment(): void
+    {
+        $task = Task::factory()->create(['description' => 'My Task']);
+        $notification = new TaskCompleted('output');
+
+        $message = $notification->toSlack($task);
+
+        $this->assertInstanceOf(SlackMessage::class, $message);
+        $attachment = $message->attachments[0];
+        $this->assertStringContainsString('My Task', $attachment->content);
     }
 }
