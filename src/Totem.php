@@ -24,7 +24,6 @@ class Totem
      * Determine if the given request can access the Totem dashboard.
      *
      * @param  Request|string|null  $request
-     * @return bool
      */
     public static function check($request): bool
     {
@@ -48,8 +47,6 @@ class Totem
 
     /**
      * Return available frequencies.
-     *
-     * @return array
      */
     public static function frequencies(): array
     {
@@ -58,8 +55,6 @@ class Totem
 
     /**
      * Return collection of Artisan commands filtered if needed.
-     *
-     * @return Collection
      */
     public static function getCommands(): Collection
     {
@@ -89,9 +84,6 @@ class Totem
         });
     }
 
-    /**
-     * @return bool
-     */
     public static function isEnabled(): bool
     {
         try {

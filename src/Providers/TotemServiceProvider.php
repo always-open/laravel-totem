@@ -19,8 +19,6 @@ class TotemServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -33,8 +31,6 @@ class TotemServiceProvider extends ServiceProvider
 
     /**
      * Register any services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -55,10 +51,8 @@ class TotemServiceProvider extends ServiceProvider
 
     /**
      * Register the Totem resources.
-     *
-     * @return void
      */
-    protected function registerResources()
+    protected function registerResources(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'totem');
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
@@ -67,10 +61,8 @@ class TotemServiceProvider extends ServiceProvider
 
     /**
      * Define the asset publishing configuration.
-     *
-     * @return void
      */
-    public function defineAssetPublishing()
+    public function defineAssetPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../../public/js' => public_path('vendor/totem/js'),

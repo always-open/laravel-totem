@@ -24,8 +24,6 @@ class EloquentTaskRepository implements TaskInterface
 {
     /**
      * Return task eloquent builder.
-     *
-     * @return Builder
      */
     public function builder(): Builder
     {
@@ -44,8 +42,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Get the cache store instance configured for Totem.
-     *
-     * @return \Illuminate\Cache\Repository
      */
     private function cache(): \Illuminate\Contracts\Cache\Repository
     {
@@ -55,10 +51,9 @@ class EloquentTaskRepository implements TaskInterface
     /**
      * Find a task by id.
      *
-     * @param  int|Task  $id
      * @return Task|null
      */
-    public function find(Task|int $id)
+    public function find(Task|int $id): ?Task
     {
         if ($id instanceof Task) {
             return $id;
@@ -71,8 +66,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Find all tasks.
-     *
-     * @return Collection
      */
     public function findAll(): Collection
     {
@@ -83,8 +76,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Find all active tasks.
-     *
-     * @return Collection
      */
     public function findAllActive(): Collection
     {
@@ -97,9 +88,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Create a new task.
-     *
-     * @param  array  $input
-     * @return bool|Task
      */
     public function store(array $input): bool|Task
     {
@@ -117,10 +105,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Update the given task.
-     *
-     * @param  array  $input
-     * @param  Task  $task
-     * @return Task
      */
     public function update(array $input, $task): Task
     {
@@ -138,9 +122,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Delete the given task.
-     *
-     * @param  int|Task  $id
-     * @return bool
      */
     public function destroy(Task|int $id): bool
     {
@@ -193,9 +174,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Execute a given task.
-     *
-     * @param  int|Task  $id
-     * @return Task
      */
     public function execute(Task|int $id): Task
     {
@@ -215,9 +193,6 @@ class EloquentTaskRepository implements TaskInterface
 
     /**
      * Import tasks.
-     *
-     * @param  $input
-     * @return void
      */
     public function import($input): void
     {

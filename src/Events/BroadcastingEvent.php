@@ -12,8 +12,6 @@ class BroadcastingEvent extends TaskEvent implements ShouldBroadcast
 
     /**
      * Get the channels the event should broadcast on.
-     *
-     * @return PrivateChannel
      */
     public function broadcastOn(): PrivateChannel
     {
@@ -22,8 +20,6 @@ class BroadcastingEvent extends TaskEvent implements ShouldBroadcast
 
     /**
      * Toggles event broadcasting on/off based on config value.
-     *
-     * @return bool
      */
     public function broadcastWhen(): bool
     {

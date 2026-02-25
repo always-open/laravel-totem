@@ -14,9 +14,6 @@ class ActiveTasksController extends Controller
      */
     private TaskInterface $tasks;
 
-    /**
-     * @param  TaskInterface  $tasks
-     */
     public function __construct(TaskInterface $tasks)
     {
         parent::__construct();
@@ -26,9 +23,6 @@ class ActiveTasksController extends Controller
 
     /**
      * Store a newly active task in storage.
-     *
-     * @param  Request  $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -39,9 +33,6 @@ class ActiveTasksController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  Task  $task
-     * @return JsonResponse
      */
     public function destroy(Task $task): JsonResponse
     {

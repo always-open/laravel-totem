@@ -28,9 +28,6 @@ trait HasFrequencies
      */
     protected array $rejects = [];
 
-    /**
-     * Boot HasFrequencies Trait.
-     */
     public static function bootHasFrequencies(): void
     {
         static::deleting(function ($model) {
@@ -79,8 +76,6 @@ trait HasFrequencies
 
     /**
      * Frequencies Relation.
-     *
-     * @return HasMany
      */
     public function frequencies(): HasMany
     {
@@ -89,8 +84,6 @@ trait HasFrequencies
 
     /**
      * Generate a cron expression from frequencies.
-     *
-     * @return string
      */
     public function getCronExpression(): string
     {
@@ -113,9 +106,6 @@ trait HasFrequencies
 
     /**
      * Determine if the filters pass for the event.
-     *
-     * @param  Application  $app
-     * @return bool
      */
     public function filtersPass(Application $app): bool
     {
@@ -136,9 +126,6 @@ trait HasFrequencies
 
     /**
      * Register a callback to further filter the schedule.
-     *
-     * @param  Closure  $callback
-     * @return $this
      */
     public function when(Closure $callback): static
     {
@@ -149,10 +136,6 @@ trait HasFrequencies
 
     /**
      * Schedule the event to run between start and end time.
-     *
-     * @param  string  $startTime
-     * @param  string  $endTime
-     * @return $this
      */
     public function between($startTime, $endTime): static
     {

@@ -9,8 +9,6 @@ class BustCacheImmediately
 {
     /**
      * Handle the event.
-     *
-     * @param  Event  $event
      */
     public function handle(Event $event)
     {
@@ -19,8 +17,6 @@ class BustCacheImmediately
 
     /**
      * Clear Cache.
-     *
-     * @param  Event  $event
      */
     protected function clear(Event $event)
     {

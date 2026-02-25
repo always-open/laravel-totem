@@ -8,8 +8,6 @@ class BuildCache extends Listener
 {
     /**
      * Handle the event.
-     *
-     * @param  Event  $event
      */
     public function handle(Event $event)
     {
@@ -18,8 +16,6 @@ class BuildCache extends Listener
 
     /**
      * Rebuild Cache.
-     *
-     * @param  Event  $event
      */
     protected function build(Event $event)
     {

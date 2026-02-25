@@ -44,9 +44,6 @@ class Result extends TotemModel
             ->getQuery();
     }
 
-    /**
-     * @return TotemResultFactory
-     */
     protected static function newFactory(): TotemResultFactory
     {
         return TotemResultFactory::new();

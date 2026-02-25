@@ -12,9 +12,6 @@ class ExecuteTasksController extends Controller
      */
     private TaskInterface $tasks;
 
-    /**
-     * @param  TaskInterface  $tasks
-     */
     public function __construct(TaskInterface $tasks)
     {
         parent::__construct();

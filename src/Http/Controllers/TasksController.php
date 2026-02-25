@@ -18,11 +18,6 @@ class TasksController extends Controller
      */
     private TaskInterface $tasks;
 
-    /**
-     * TasksController constructor.
-     *
-     * @param  TaskInterface  $tasks
-     */
     public function __construct(TaskInterface $tasks)
     {
         parent::__construct();
@@ -32,8 +27,6 @@ class TasksController extends Controller
 
     /**
      * Display a listing of the tasks.
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -55,8 +48,6 @@ class TasksController extends Controller
 
     /**
      * Show the form for creating a new task.
-     *
-     * @return View
      */
     public function create(): View
     {
@@ -74,9 +65,6 @@ class TasksController extends Controller
 
     /**
      * Store a newly created task in storage.
-     *
-     * @param  TaskRequest  $request
-     * @return RedirectResponse
      */
     public function store(TaskRequest $request): RedirectResponse
     {
@@ -102,9 +90,6 @@ class TasksController extends Controller
 
     /**
      * Show the form for editing the specified task.
-     *
-     * @param  Task  $task
-     * @return View
      */
     public function edit(Task $task): View
     {
@@ -122,10 +107,6 @@ class TasksController extends Controller
 
     /**
      * Update the specified task in storage.
-     *
-     * @param  TaskRequest  $request
-     * @param  $task
-     * @return RedirectResponse
      */
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
@@ -138,9 +119,6 @@ class TasksController extends Controller
 
     /**
      * Remove the specified task from storage.
-     *
-     * @param  Task  $task
-     * @return RedirectResponse
      */
     public function destroy(Task $task): RedirectResponse
     {

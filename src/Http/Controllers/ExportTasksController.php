@@ -12,11 +12,6 @@ class ExportTasksController extends Controller
      */
     private TaskInterface $tasks;
 
-    /**
-     * ExportTasksController constructor.
-     *
-     * @param  TaskInterface  $tasks
-     */
     public function __construct(TaskInterface $tasks)
     {
         parent::__construct();
@@ -26,8 +21,6 @@ class ExportTasksController extends Controller
 
     /**
      * Export all tasks to a json file.
-     *
-     * @return StreamedResponse
      */
     public function index(): StreamedResponse
     {

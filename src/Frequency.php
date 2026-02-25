@@ -17,9 +17,6 @@ class Frequency extends TotemModel
         'interval',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);

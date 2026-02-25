@@ -8,8 +8,6 @@ class DashboardController extends Controller
 {
     /**
      * Single page application catch-all route.
-     *
-     * @return RedirectResponse
      */
     public function index(): RedirectResponse
     {

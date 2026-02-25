@@ -55,8 +55,6 @@ class Task extends TotemModel
 
     /**
      * Activated Accessor.
-     *
-     * @return bool
      */
     public function getActivatedAttribute(): bool
     {
@@ -79,7 +77,6 @@ class Task extends TotemModel
      * Convert a string of command arguments and options to an array.
      *
      * @param  bool  $console  if true will convert arguments to non associative array
-     * @return array
      */
     public function compileParameters(bool $console = false): array
     {
@@ -133,8 +130,6 @@ class Task extends TotemModel
 
     /**
      * Results Relation.
-     *
-     * @return HasMany
      */
     public function results(): HasMany
     {
@@ -143,17 +138,12 @@ class Task extends TotemModel
 
     /**
      * Returns the most recent result entry for this task.
-     *
-     * @return Result|null
      */
     public function getLastResultAttribute(): ?Result
     {
         return $this->results()->orderBy('id', 'desc')->first();
     }
 
-    /**
-     * @return float
-     */
     public function getAverageRuntimeAttribute(): float
     {
         return $this->results()->avg('duration') ?? 0.00;
@@ -161,8 +151,6 @@ class Task extends TotemModel
 
     /**
      * Route notifications for the mail channel.
-     *
-     * @return string
      */
     public function routeNotificationForMail(): string
     {
@@ -171,8 +159,6 @@ class Task extends TotemModel
 
     /**
      * Route notifications for the Vonage channel.
-     *
-     * @return string
      */
     public function routeNotificationForVonage(): string
     {
@@ -181,8 +167,6 @@ class Task extends TotemModel
 
     /**
      * Route notifications for the Slack channel.
-     *
-     * @return string
      */
     public function routeNotificationForSlack(): string
     {
@@ -232,8 +216,6 @@ class Task extends TotemModel
 
     /**
      * Create a new factory instance for the model.
-     *
-     * @return TotemTaskFactory
      */
     protected static function newFactory(): TotemTaskFactory
     {

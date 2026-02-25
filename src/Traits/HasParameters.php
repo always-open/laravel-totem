@@ -8,9 +8,6 @@ use Studio\Totem\Parameter;
 
 trait HasParameters
 {
-    /**
-     * Boot HasParameters Trait.
-     */
     public static function bootHasParameters(): void
     {
         static::deleting(function ($model) {
@@ -36,9 +33,6 @@ trait HasParameters
         $this->parameters()->delete();
     }
 
-    /**
-     * @return HasMany
-     */
     public function parameters(): HasMany
     {
         return $this->hasMany(Parameter::class);

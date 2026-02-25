@@ -6,12 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait FrontendSortable
 {
-    /**
-     * @param  Builder  $builder
-     * @param  array  $sortableColumns
-     * @param  array  $defaultSort
-     * @return Builder
-     */
     public function scopeSortableBy(Builder $builder, array $sortableColumns, array $defaultSort = ['name' => 'asc']): Builder
     {
         $request = request();

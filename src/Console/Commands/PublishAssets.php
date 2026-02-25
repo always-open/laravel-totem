@@ -20,11 +20,6 @@ class PublishAssets extends Command
      */
     protected $description = 'Re-publish Totem assets';
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $this->call('vendor:publish', [

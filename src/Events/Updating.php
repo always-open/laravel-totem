@@ -12,12 +12,6 @@ class Updating extends BroadcastingEvent
      */
     private array $input;
 
-    /**
-     * Create a new event instance.
-     *
-     * @param  array  $input
-     * @param  Task  $task
-     */
     public function __construct(array $input, Task $task)
     {
         $this->input = $input;
@@ -26,8 +20,6 @@ class Updating extends BroadcastingEvent
 
     /**
      * Get the channels the event should broadcast on.
-     *
-     * @return PrivateChannel
      */
     public function broadcastOn(): PrivateChannel
     {

@@ -15,11 +15,6 @@ class TaskEvent extends Event
      */
     public Task $task;
 
-    /**
-     * Constructor.
-     *
-     * @param  Task  $task
-     */
     public function __construct(Task $task)
     {
         $this->task = $task;

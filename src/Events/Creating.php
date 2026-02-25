@@ -19,8 +19,6 @@ class Creating implements ShouldBroadcast
 
     /**
      * Create a new event instance.
-     *
-     * @param  array  $input
      */
     public function __construct(array $input)
     {
@@ -29,8 +27,6 @@ class Creating implements ShouldBroadcast
 
     /**
      * Get the channels the event should broadcast on.
-     *
-     * @return PrivateChannel
      */
     public function broadcastOn(): PrivateChannel
     {

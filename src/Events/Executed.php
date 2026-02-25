@@ -10,7 +10,6 @@ class Executed extends BroadcastingEvent
     /**
      * Executed constructor.
      *
-     * @param  Task  $task
      * @param  string|float|int  $started
      * @param  $output
      */

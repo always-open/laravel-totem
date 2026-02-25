@@ -29,12 +29,6 @@ class ListSchedule extends Command
      */
     private $schedule;
 
-    /**
-     * Create a new command instance.
-     *
-     * @param  Schedule  $schedule
-     * @return void
-     */
     public function __construct(Schedule $schedule)
     {
         parent::__construct();
@@ -44,8 +38,6 @@ class ListSchedule extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
