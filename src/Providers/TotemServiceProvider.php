@@ -2,9 +2,6 @@
 
 namespace Studio\Totem\Providers;
 
-use Cron\CronExpression;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
 use Studio\Totem\Console\Commands\PublishAssets;
@@ -18,18 +15,10 @@ class TotemServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerResources();
         $this->defineAssetPublishing();
-
-        Validator::extend('cron_expression', function ($attribute, $value, $parameters, $validator) {
-            return CronExpression::isValidExpression($value);
-        });
-
-        Validator::extend('json_file', function ($attribute, UploadedFile $value, $validator) {
-            return $value->getClientOriginalExtension() == 'json';
-        });
     }
 
     /**

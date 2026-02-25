@@ -5,43 +5,28 @@ namespace Studio\Totem\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Studio\Totem\Rules\JsonFile;
 
 class ImportRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'tasks' => 'required|file|jsonFile',
-            'content' => 'json',
+            'tasks' => ['required', 'file', new JsonFile],
+            'content' => ['json'],
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
             'tasks.required' => 'Please select a file to import',
             'tasks.file' => 'Please select a file to import',
-            'tasks.json_file' => 'Please select a json file',
             'content' => 'File does not contain valid json',
         ];
     }
