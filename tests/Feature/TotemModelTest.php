@@ -30,4 +30,12 @@ class TotemModelTest extends TestCase
         $task = new Task;
         $this->assertEquals('sqlite', $task->getConnectionName());
     }
+
+    public function test_model_falls_back_to_default_connection_when_not_configured(): void
+    {
+        config(['totem.database_connection' => null]);
+
+        $task = new Task;
+        $this->assertEquals(config('database.default'), $task->getConnectionName());
+    }
 }

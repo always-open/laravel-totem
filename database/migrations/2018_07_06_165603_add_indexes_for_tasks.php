@@ -48,7 +48,7 @@ class AddIndexesForTasks extends TotemMigration
      */
     public function down()
     {
-        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+        if (Schema::connection($this->getConnection())->getDriverName() !== 'sqlite') {
             Schema::connection($this->getConnection())
                 ->table($this->prefix().'task_results', function (Blueprint $table) {
                     $table->dropForeign('task_id_fk');

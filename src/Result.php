@@ -28,9 +28,6 @@ class Result extends TotemModel
         return $this->belongsTo(Task::class);
     }
 
-    /**
-     * @return Builder
-     */
     public function getLastRun(): Builder
     {
         return $this->select('ran_at')
@@ -40,9 +37,6 @@ class Result extends TotemModel
             ->getQuery();
     }
 
-    /**
-     * @return Builder
-     */
     public function getAverageRunTime(): Builder
     {
         return $this->select(DB::raw('avg(duration)'))
