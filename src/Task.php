@@ -170,11 +170,11 @@ class Task extends TotemModel
     }
 
     /**
-     * Route notifications for the Nexmo channel.
+     * Route notifications for the Vonage channel.
      *
      * @return string
      */
-    public function routeNotificationForNexmo(): string
+    public function routeNotificationForVonage(): string
     {
         return $this->notification_phone_number;
     }

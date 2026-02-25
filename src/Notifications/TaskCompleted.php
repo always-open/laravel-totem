@@ -5,42 +5,26 @@ namespace Studio\Totem\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 class TaskCompleted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var
-     */
-    private $output;
+    public function __construct(private readonly string $output) {}
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct($output)
-    {
-        $this->output = $output;
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via(mixed $notifiable): array
     {
         $channels = [];
+
         if ($notifiable->notification_email_address) {
             $channels[] = 'mail';
         }
         if ($notifiable->notification_phone_number) {
-            $channels[] = 'nexmo';
+            $channels[] = 'vonage';
         }
         if ($notifiable->notification_slack_webhook) {
             $channels[] = 'slack';
@@ -49,39 +33,21 @@ class TaskCompleted extends Notification implements ShouldQueue
         return $channels;
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return MailMessage
-     */
     public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject($notifiable->description)
-                    ->greeting('Hi,')
-                    ->line("{$notifiable->description} just finished running.")
-                    ->line($this->output);
+            ->subject($notifiable->description)
+            ->greeting('Hi,')
+            ->line("{$notifiable->description} just finished running.")
+            ->line($this->output);
     }
 
-    /**
-     * Get the Nexmo / SMS representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return NexmoMessage
-     */
-    public function toNexmo(mixed $notifiable): NexmoMessage
+    public function toVonage(mixed $notifiable): VonageMessage
     {
-        return (new NexmoMessage)
+        return (new VonageMessage)
             ->content($notifiable->description.' just finished running.');
     }
 
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return SlackMessage
-     */
     public function toSlack(mixed $notifiable): SlackMessage
     {
         return (new SlackMessage)
