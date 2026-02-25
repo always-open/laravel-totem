@@ -3,14 +3,23 @@
 namespace Studio\Totem\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
+use Studio\Totem\Events\Activated;
+use Studio\Totem\Events\Created;
+use Studio\Totem\Events\Deactivated;
+use Studio\Totem\Events\Deleted;
+use Studio\Totem\Events\Deleting;
+use Studio\Totem\Events\Updated;
+use Studio\Totem\Listeners\BuildCache;
+use Studio\Totem\Listeners\BustCache;
+use Studio\Totem\Listeners\BustCacheImmediately;
 
 class TotemEventServiceProvider extends EventServiceProvider
 {
     protected $listen = [
-        'Studio\Totem\Events\Created' => ['Studio\Totem\Listeners\BustCache', 'Studio\Totem\Listeners\BuildCache'],
-        'Studio\Totem\Events\Updated' => ['Studio\Totem\Listeners\BustCache', 'Studio\Totem\Listeners\BuildCache'],
-        'Studio\Totem\Events\Activated' => ['Studio\Totem\Listeners\BustCache', 'Studio\Totem\Listeners\BuildCache'],
-        'Studio\Totem\Events\Deactivated' => ['Studio\Totem\Listeners\BustCache', 'Studio\Totem\Listeners\BuildCache'],
-        'Studio\Totem\Events\Deleting' => ['Studio\Totem\Listeners\BustCacheImmediately'],
+        Created::class => [BustCache::class, BuildCache::class],
+        Updated::class => [BustCache::class, BuildCache::class],
+        Activated::class => [BustCache::class, BuildCache::class],
+        Deactivated::class => [BustCache::class, BuildCache::class],
+        Deleting::class => [BustCacheImmediately::class],
     ];
 }
