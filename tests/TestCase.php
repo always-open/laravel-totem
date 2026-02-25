@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Orchestra\Testbench\Exceptions\Handler;
 use Studio\Totem\Providers\TotemServiceProvider;
 use Studio\Totem\Totem;
-use Studio\Totem\Tests\TestUser;
 use Throwable;
 
 class TestCase extends \Orchestra\Testbench\TestCase
