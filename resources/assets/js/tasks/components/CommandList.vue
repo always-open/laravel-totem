@@ -2,7 +2,7 @@
     <click-to-close :do="close">
         <div class="search-select">
             <input type="text" name="command" ref="input" readonly @click="open" class="uk-input" v-model="selected" placeholder="Select a command"/>
-            <div ref="dropdown" v-show="isOpen" class="uk-card uk-card-default uk-padding-small uk-box-shadow-large">
+            <div v-show="isOpen" class="uk-card uk-card-default uk-padding-small uk-box-shadow-large">
                 <div class="uk-search uk-search-default uk-width-1-1">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                     <label>
