@@ -32,5 +32,6 @@ class JsonFileRuleTest extends TestCase
         });
 
         $this->assertNotNull($message);
+        $this->assertStringContainsString('JSON file', $message);
     }
 }
