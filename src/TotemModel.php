@@ -16,10 +16,6 @@ class TotemModel extends Model
         $prefix = config('totem.table_prefix', '');
         $table = parent::getTable();
 
-        if ($prefix !== '' && str_starts_with($table, $prefix)) {
-            return $table;
-        }
-
-        return $prefix.$table;
+        return str_starts_with($table, $prefix) ? $table : $prefix.$table;
     }
 }

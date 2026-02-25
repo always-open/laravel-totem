@@ -69,6 +69,44 @@ class CacheStoreTest extends TestCase
         $this->assertFalse(Cache::store('totem_store')->has('totem.task.'.$task->id));
     }
 
+    public function test_updating_task_clears_route_binding_cache()
+    {
+        config(['totem.cache_store' => 'totem_store']);
+
+        $task = \Studio\Totem\Task::factory()->create();
+        Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
+
+        \Studio\Totem\Events\Updated::dispatch($task);
+
+        $this->assertFalse(Cache::store('totem_store')->has('totem.task.'.$task->id));
+        $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.all'));
+        $this->assertFalse(Cache::store('totem_store')->has('totem.tasks.active'));
+    }
+
+    public function test_activating_task_clears_route_binding_cache()
+    {
+        config(['totem.cache_store' => 'totem_store']);
+
+        $task = \Studio\Totem\Task::factory()->create();
+        Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
+
+        \Studio\Totem\Events\Activated::dispatch($task);
+
+        $this->assertFalse(Cache::store('totem_store')->has('totem.task.'.$task->id));
+    }
+
+    public function test_deactivating_task_clears_route_binding_cache()
+    {
+        config(['totem.cache_store' => 'totem_store']);
+
+        $task = \Studio\Totem\Task::factory()->create();
+        Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
+
+        \Studio\Totem\Events\Deactivated::dispatch($task);
+
+        $this->assertFalse(Cache::store('totem_store')->has('totem.task.'.$task->id));
+    }
+
     public function test_is_enabled_uses_configured_cache_store()
     {
         config(['totem.cache_store' => 'totem_store']);

@@ -25,10 +25,10 @@ class TaskCompleted extends Notification implements ShouldQueue
         if ($notifiable->notification_email_address) {
             $channels[] = 'mail';
         }
-        if ($notifiable->notification_phone_number) {
+        if ($notifiable->notification_phone_number && class_exists(VonageMessage::class)) {
             $channels[] = 'vonage';
         }
-        if ($notifiable->notification_slack_webhook) {
+        if ($notifiable->notification_slack_webhook && class_exists(SlackMessage::class)) {
             $channels[] = 'slack';
         }
 
