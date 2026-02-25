@@ -142,7 +142,7 @@ class TasksController extends Controller
      * @param  Task  $task
      * @return RedirectResponse
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): RedirectResponse
     {
         $this->tasks->destroy($task);
 

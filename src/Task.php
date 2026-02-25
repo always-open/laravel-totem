@@ -192,7 +192,7 @@ class Task extends TotemModel
     /**
      * Attempt to perform clean on task results.
      */
-    public function autoCleanup()
+    public function autoCleanup(): void
     {
         if ($this->auto_cleanup_num > 0) {
             if ($this->auto_cleanup_type === 'results') {

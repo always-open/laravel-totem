@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Orchestra\Testbench\Exceptions\Handler;
 use Studio\Totem\Providers\TotemServiceProvider;
 use Studio\Totem\Totem;
-use Studio\Totem\User;
+use Studio\Totem\Tests\TestUser;
 use Throwable;
 
 class TestCase extends \Orchestra\Testbench\TestCase
@@ -88,7 +88,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
      */
     public function signIn()
     {
-        $user = User::factory()->create();
+        $user = TestUser::factory()->create();
 
         $this->actingAs($user);
 

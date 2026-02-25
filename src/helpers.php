@@ -4,25 +4,25 @@ namespace Studio\Totem\Helpers;
 
 use Illuminate\Support\HtmlString;
 
-function columnSort(string $label, string $columnKey, bool $isDefault = false)
+function columnSort(string $label, string $columnKey, bool $isDefault = false): HtmlString
 {
     $icon = '';
 
     if (request()->has('sort_by')) {
-        if (request()->input('sort_by') == $columnKey) {
-            $icon = ' <span class="fa fa-caret-'
-                .(request()->input('sort_direction', 'asc') == 'asc' ? 'up' : 'down')
-                .'"></span>';
+        if (request()->input('sort_by') === $columnKey) {
+            $icon = request()->input('sort_direction', 'asc') === 'asc'
+                ? ' <span uk-icon="icon: triangle-up; ratio: 0.7"></span>'
+                : ' <span uk-icon="icon: triangle-down; ratio: 0.7"></span>';
         }
     } elseif ($isDefault) {
-        $icon = ' <span class="fa fa-caret-'
-            .(request()->input('sort_direction', 'asc') == 'asc' ? 'up' : 'down')
-            .'"></span>';
+        $icon = request()->input('sort_direction', 'asc') === 'asc'
+            ? ' <span uk-icon="icon: triangle-up; ratio: 0.7"></span>'
+            : ' <span uk-icon="icon: triangle-down; ratio: 0.7"></span>';
     }
 
     $order = 'asc';
     if (request()->has('sort_direction')) {
-        $order = (request()->input('sort_direction') == 'desc' ? 'asc' : 'desc');
+        $order = request()->input('sort_direction') === 'desc' ? 'asc' : 'desc';
     } elseif ($isDefault) {
         $order = 'desc';
     }
@@ -30,16 +30,7 @@ function columnSort(string $label, string $columnKey, bool $isDefault = false)
     $url = request()->fullUrlWithQuery([
         'sort_by' => $columnKey,
         'sort_direction' => $order,
-        'filter' => request('filter'),
-        'limit' => request('limit'),
     ]);
 
-    return new HtmlString(
-        '<a href="'
-        .$url
-        .'">'
-        .$label
-        .$icon
-        .'</a>'
-    );
+    return new HtmlString('<a href="'.$url.'">'.$label.$icon.'</a>');
 }
