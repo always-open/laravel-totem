@@ -4,20 +4,22 @@ import { resolve } from 'path';
 
 export default defineConfig({
     plugins: [vue()],
+    publicDir: false,
     build: {
         lib: {
             entry: resolve(__dirname, 'resources/assets/js/app.js'),
             name: 'TotemApp',
             formats: ['iife'],
-            fileName: () => 'app.js',
+            fileName: () => 'js/app.js',
+            cssFileName: 'css/components',
         },
-        outDir: 'public/js',
+        outDir: 'public',
         emptyOutDir: false,
         cssCodeSplit: false,
         rollupOptions: {
             output: {
                 assetFileNames: (assetInfo) => {
-                    if (assetInfo.name?.endsWith('.css')) return '../css/components.css';
+                    if (assetInfo.name?.endsWith('.css')) return 'css/components.css';
                     return '[name][extname]';
                 },
             },

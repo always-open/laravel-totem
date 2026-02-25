@@ -52,8 +52,8 @@
             </div>
 
             <!-- 24 hour rows -->
-            <template v-for="hour in 24">
-                <div :key="'label-' + hour" class="totem-calendar__time-label">
+            <template v-for="hour in 24" :key="'row-' + hour">
+                <div class="totem-calendar__time-label">
                     {{ formatHour(hour - 1) }}
                 </div>
                 <div
