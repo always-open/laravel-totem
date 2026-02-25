@@ -2,12 +2,14 @@
 
 namespace Studio\Totem\Providers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
 use Studio\Totem\Console\Commands\PublishAssets;
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Repositories\EloquentTaskRepository;
+use Studio\Totem\Task;
 
 class TotemServiceProvider extends ServiceProvider
 {
@@ -29,7 +31,7 @@ class TotemServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__.'/../../config/totem.php',
@@ -97,9 +99,10 @@ class TotemServiceProvider extends ServiceProvider
     protected function registerRouteBind(): void
     {
         Route::bind('totemTask', function ($value) {
-            return cache()->rememberForever('totem.task.'.$value, function () use ($value) {
-                return \Studio\Totem\Task::find($value) ?? abort(404);
-            });
+            return Cache::store(config('totem.cache_store'))
+                ->rememberForever('totem.task.'.$value, function () use ($value) {
+                    return Task::query()->with('frequencies')->find($value) ?? abort(404);
+                });
         });
     }
 }
