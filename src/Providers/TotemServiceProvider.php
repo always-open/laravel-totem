@@ -2,6 +2,7 @@
 
 namespace Studio\Totem\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
 use Studio\Totem\Console\Commands\PublishAssets;
@@ -19,6 +20,8 @@ class TotemServiceProvider extends ServiceProvider
     {
         $this->registerResources();
         $this->defineAssetPublishing();
+        $this->registerRoutes();
+        $this->registerRouteBind();
     }
 
     /**
@@ -40,7 +43,6 @@ class TotemServiceProvider extends ServiceProvider
 
         $this->app->bindIf('totem.tasks', EloquentTaskRepository::class, true);
         $this->app->alias('totem.tasks', TaskInterface::class);
-        $this->app->register(TotemRouteServiceProvider::class);
         $this->app->register(TotemEventServiceProvider::class);
         $this->app->register(ConsoleServiceProvider::class);
     }
@@ -83,5 +85,21 @@ class TotemServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../config' => config_path(),
         ], 'totem-config');
+    }
+
+    protected function registerRoutes(): void
+    {
+        Route::prefix(config('totem.web.route_prefix', 'totem'))
+            ->middleware(config('totem.web.middleware', 'web'))
+            ->group(__DIR__.'/../../routes/web.php');
+    }
+
+    protected function registerRouteBind(): void
+    {
+        Route::bind('totemTask', function ($value) {
+            return cache()->rememberForever('totem.task.'.$value, function () use ($value) {
+                return \Studio\Totem\Task::find($value) ?? abort(404);
+            });
+        });
     }
 }

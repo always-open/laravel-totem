@@ -220,9 +220,6 @@ return [
         'middleware' => env('TOTEM_WEB_MIDDLEWARE', 'web'),
         'route_prefix' => env('TOTEM_WEB_ROUTE_PREFIX', 'totem'),
     ],
-    'api' => [
-        'middleware' => env('TOTEM_API_MIDDLEWARE', 'api'),
-    ],
     'table_prefix' => env('TOTEM_TABLE_PREFIX', ''),
     'artisan' => [
         'command_filter' => [],
