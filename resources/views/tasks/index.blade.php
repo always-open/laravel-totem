@@ -35,11 +35,11 @@
         </thead>
         <tbody>
             @forelse($tasks as $task)
-                <tr is="task-row"
-                    :data-task="{{$task}}"
-                    showHref="{{route('totem.task.view', ['totemTask' => $task])}}"
-                    executeHref="{{route('totem.task.execute', ['totemTask' => $task])}}">
-                </tr>
+                <task-row
+                    :data-task="{{ $task }}"
+                    show-href="{{ route('totem.task.view', ['totemTask' => $task]) }}"
+                    execute-href="{{ route('totem.task.execute', ['totemTask' => $task]) }}"
+                ></task-row>
             @empty
                 <tr>
                     <td class="uk-text-center" colspan="5">

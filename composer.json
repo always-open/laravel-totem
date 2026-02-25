@@ -30,22 +30,29 @@
     "illuminate/notifications": "^10.0|^11.0|^12.0"
   },
   "require-dev": {
-    "orchestra/testbench" : "^8.0|^9.0|^10.0",
+    "laravel/slack-notification-channel": "^3.7",
+    "laravel/vonage-notification-channel": "^3.3",
+    "orchestra/testbench": "^8.0|^9.0|^10.0",
     "phpunit/phpunit": "^10.0|^11.0|^12.0"
   },
   "suggest": {
-    "nexmo/client": "Required for sms notifications."
+    "laravel/slack-notification-channel": "Required for Slack notifications.",
+    "laravel/vonage-notification-channel": "Required for SMS notifications via Vonage."
   },
   "autoload": {
     "psr-4": {
       "Studio\\Totem\\": "src/",
-      "Studio\\Totem\\Tests\\": "tests/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
     },
     "files": [
       "src/helpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Studio\\Totem\\Tests\\": "tests/"
+    }
   },
   "extra": {
     "component": "package",

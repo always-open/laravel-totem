@@ -60,91 +60,14 @@
             </select>
         </div>
     </div>
-    <task-type inline-template current="{{old('type', $task->expression ? 'expression' : 'frequency')}}" :existing="{{old('frequencies') ? json_encode(old('frequencies')) : $task->frequencies}}" >
-        <div class="uk-margin">
-            <div class="uk-grid">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <div class="uk-form-label">Type</div>
-                    <div class="uk-text-meta">Choose whether to define a cron expression or to add frequencies</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m uk-form-controls-text">
-                    <label>
-                        <input type="radio" name="type" v-model="type" value="expression"> Expression
-                    </label><br>
-                    <label>
-                        <input type="radio" name="type" v-model="type" value="frequency"> Frequencies
-                    </label>
-                </div>
-            </div>
-            <div class="uk-grid" v-if="isCron">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <label class="uk-form-label">Cron Expression</label>
-                    <div class="uk-text-meta">Add a cron expression for your task</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m">
-                    <input class="uk-input" placeholder="e.g * * * * * to run this task all the time" name="expression" id="expression" value="{{old('expression', $task->expression)}}" type="text">
-                    @if($errors->has('expression'))
-                        <p class="uk-text-danger">{{$errors->first('expression')}}</p>
-                    @endif
-                </div>
-            </div>
-            <div class="uk-grid" v-if="managesFrequencies">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <label class="uk-form-label">Frequencies</label>
-                    <div class="uk-text-meta">Add frequencies to your task. These frequencies will be converted into a cron expression while scheduling the task</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m">
-                    <a class="uk-button uk-button-small uk-button-link" @click.self.prevent="showModal = true">Add Frequency</a>
-                    @include('totem::dialogs.frequencies.add')
-                    <table class="uk-table uk-table-divider uk-margin-remove">
-                        <thead>
-                            <tr>
-                                <th class="uk-padding-remove-left">
-                                    Frequency
-                                </th>
-                                <th class="uk-padding-remove-left">
-                                    Parameters
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(frequency, index) in frequencies">
-                                <td class="uk-padding-remove-left">
-                                    @{{ frequency.label }}
-                                    <input type="hidden" :name="'frequencies[' + index + '][interval]'" v-model="frequency.interval">
-                                    <input type="hidden" :name="'frequencies[' + index + '][label]'" v-model="frequency.label">
-                                </td>
-                                <td class="uk-padding-remove-left">
-                                    <span v-if="frequency.parameters && frequency.parameters.length > 0">
-                                        <span v-for="(parameter, key) in frequency.parameters">
-                                            @{{ parameter.value }}
-                                            <span v-if="frequency.parameters.length > 1 && key < frequency.parameters.length - 1">,</span>
-                                            <input type="hidden" :name="'frequencies[' + index + '][parameters][' + key +'][name]'" v-model="parameter.name">
-                                            <input type="hidden" :name="'frequencies[' + index + '][parameters][' + key +'][value]'" v-model="parameter.value">
-                                        </span>
-                                    </span>
-                                    <span v-else>
-                                        No Parameters
-                                    </span>
-                                </td>
-                                <td>
-                                    <a class="uk-button uk-button-link" @click="remove(index)">
-                                        <span uk-icon="icon: close"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr v-if="frequencies.length == 0">
-                                <td colspan="3" class="uk-padding-remove-left">No Frequencies Found</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @if($errors->has('frequencies'))
-                        <p class="uk-text-danger">{{$errors->first('frequencies')}}</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </task-type>
+    <task-type
+        current="{{ old('type', $task->expression ? 'expression' : 'frequency') }}"
+        :existing="{{ old('frequencies') ? json_encode(old('frequencies')) : $task->frequencies }}"
+        expression-value="{{ old('expression', $task->expression) }}"
+        expression-error="{{ $errors->first('expression') }}"
+        frequencies-error="{{ $errors->first('frequencies') }}"
+        :frequencies-config="{{ json_encode($frequencies) }}"
+    ></task-type>
     <hr class="uk-divider-icon">
     <div class="uk-grid">
         <div class="uk-width-1-1@s uk-width-1-3@m">

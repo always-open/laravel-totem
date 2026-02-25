@@ -48,7 +48,7 @@ class UpcomingTasksController extends Controller
 
         $this->tasks->findAllActive()->each(function ($task) use ($start, $end, &$events) {
             try {
-                $cron = CronExpression::factory($task->getCronExpression());
+                $cron = new CronExpression($task->getCronExpression());
                 $cursor = $start->copy();
 
                 while (true) {

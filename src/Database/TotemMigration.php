@@ -6,5 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 
 abstract class TotemMigration extends Migration
 {
-    protected $connection = TOTEM_DATABASE_CONNECTION;
+    public function getConnection(): ?string
+    {
+        return config('totem.database_connection', config('database.default'));
+    }
+
+    protected function prefix(): string
+    {
+        return config('totem.table_prefix', '');
+    }
 }

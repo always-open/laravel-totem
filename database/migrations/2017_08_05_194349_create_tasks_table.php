@@ -13,8 +13,8 @@ class CreateTasksTable extends TotemMigration
      */
     public function up()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->create(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
+        Schema::connection($this->getConnection())
+            ->create($this->prefix().'tasks', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('description');
                 $table->string('command');
@@ -36,7 +36,7 @@ class CreateTasksTable extends TotemMigration
      */
     public function down()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->dropIfExists(TOTEM_TABLE_PREFIX.'tasks');
+        Schema::connection($this->getConnection())
+            ->dropIfExists($this->prefix().'tasks');
     }
 }

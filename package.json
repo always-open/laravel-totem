@@ -1,22 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "prod": "gulp --production",
-    "dev": "gulp watch"
+    "dev": "vite build --watch",
+    "build": "vite build"
   },
   "devDependencies": {
-    "axios": "^0.21.0",
-    "es6-promise": "^4.0.5",
-    "gulp": "^3.9.1",
-    "laravel-elixir": "^6.0.0-14",
-    "laravel-elixir-vue-2": "^0.3.0",
-    "laravel-elixir-webpack-official": "^1.0.2",
-    "lodash": "^4.16.2",
-    "moment": "^2.10.6",
-    "phpunserialize": "1.*",
-    "puppeteer": "^24.37.5",
-    "uikit": "^3.0.0-rc.11",
-    "vue": "^2.2.0",
-    "xml-loader": "1.1.0"
+    "@vitejs/plugin-vue": "^5.2",
+    "axios": "^1.8",
+    "dayjs": "^1.11",
+    "uikit": "^3.25",
+    "vite": "^6.2",
+    "vue": "^3.5"
   }
 }

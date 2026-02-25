@@ -86,6 +86,6 @@ class ListSchedule extends Command
             $date->setTimezone($event->timezone);
         }
 
-        return CronExpression::factory($event->expression)->getNextRunDate($date->toDateTimeString())->format('Y-m-d H:i:s');
+        return (new CronExpression($event->expression))->getNextRunDate($date->toDateTimeString())->format('Y-m-d H:i:s');
     }
 }

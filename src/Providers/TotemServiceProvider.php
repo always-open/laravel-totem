@@ -2,14 +2,18 @@
 
 namespace Studio\Totem\Providers;
 
-use Cron\CronExpression;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
 use Studio\Totem\Console\Commands\PublishAssets;
 use Studio\Totem\Contracts\TaskInterface;
+use Studio\Totem\Events\Executed;
+use Studio\Totem\Events\Executing;
 use Studio\Totem\Repositories\EloquentTaskRepository;
+use Studio\Totem\Task;
+use Studio\Totem\Totem;
 
 class TotemServiceProvider extends ServiceProvider
 {
@@ -18,18 +22,13 @@ class TotemServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerResources();
         $this->defineAssetPublishing();
-
-        Validator::extend('cron_expression', function ($attribute, $value, $parameters, $validator) {
-            return CronExpression::isValidExpression($value);
-        });
-
-        Validator::extend('json_file', function ($attribute, UploadedFile $value, $validator) {
-            return $value->getClientOriginalExtension() == 'json';
-        });
+        $this->registerRoutes();
+        $this->registerRouteBind();
+        $this->registerSchedule();
     }
 
     /**
@@ -37,24 +36,12 @@ class TotemServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__.'/../../config/totem.php',
             'totem'
         );
-
-        if (! defined('TOTEM_PATH')) {
-            define('TOTEM_PATH', realpath(__DIR__.'/../../'));
-        }
-
-        if (! defined('TOTEM_TABLE_PREFIX')) {
-            define('TOTEM_TABLE_PREFIX', config('totem.table_prefix'));
-        }
-
-        if (! defined('TOTEM_DATABASE_CONNECTION')) {
-            define('TOTEM_DATABASE_CONNECTION', config('totem.database_connection', config('database.default')));
-        }
 
         $this->commands([
             ListSchedule::class,
@@ -63,9 +50,7 @@ class TotemServiceProvider extends ServiceProvider
 
         $this->app->bindIf('totem.tasks', EloquentTaskRepository::class, true);
         $this->app->alias('totem.tasks', TaskInterface::class);
-        $this->app->register(TotemRouteServiceProvider::class);
         $this->app->register(TotemEventServiceProvider::class);
-        $this->app->register(ConsoleServiceProvider::class);
     }
 
     /**
@@ -88,23 +73,82 @@ class TotemServiceProvider extends ServiceProvider
     public function defineAssetPublishing()
     {
         $this->publishes([
-            TOTEM_PATH.'/public/js' => public_path('vendor/totem/js'),
+            __DIR__.'/../../public/js' => public_path('vendor/totem/js'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/public/css' => public_path('vendor/totem/css'),
+            __DIR__.'/../../public/css' => public_path('vendor/totem/css'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/public/img' => public_path('vendor/totem/img'),
+            __DIR__.'/../../public/img' => public_path('vendor/totem/img'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/resources/views' => resource_path('views/vendor/totem'),
+            __DIR__.'/../../resources/views' => resource_path('views/vendor/totem'),
         ], 'totem-views');
 
         $this->publishes([
-            TOTEM_PATH.'/config' => config_path(),
+            __DIR__.'/../../config' => config_path(),
         ], 'totem-config');
+    }
+
+    protected function registerRoutes(): void
+    {
+        Route::prefix(config('totem.web.route_prefix', 'totem'))
+            ->middleware(config('totem.web.middleware', 'web'))
+            ->group(__DIR__.'/../../routes/web.php');
+    }
+
+    protected function registerRouteBind(): void
+    {
+        Route::bind('totemTask', function ($value) {
+            return Cache::store(config('totem.cache_store'))
+                ->rememberForever('totem.task.'.$value, function () use ($value) {
+                    return Task::query()->with('frequencies')->find($value) ?? abort(404);
+                });
+        });
+    }
+
+    private function registerSchedule(): void
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            if (Totem::isEnabled()) {
+                $this->scheduleTotemTasks($schedule);
+            }
+        });
+    }
+
+    public function scheduleTotemTasks(Schedule $schedule): void
+    {
+        $tasks = app('totem.tasks')->findAllActive();
+
+        $tasks->each(function ($task) use ($schedule) {
+            $event = $schedule->command($task->command, $task->compileParameters(true));
+
+            $event->cron($task->getCronExpression())
+                ->name($task->description)
+                ->timezone($task->timezone)
+                ->before(function () use ($task, $event) {
+                    $event->start = microtime(true);
+                    Executing::dispatch($task);
+                })
+                ->thenWithOutput(function ($output) use ($event, $task) {
+                    Executed::dispatch($task, $event->start ?? microtime(true), $output);
+                });
+
+            if ($task->dont_overlap) {
+                $event->withoutOverlapping();
+            }
+            if ($task->run_in_maintenance) {
+                $event->evenInMaintenanceMode();
+            }
+            if ($task->run_on_one_server && in_array(config('cache.default'), ['memcached', 'redis', 'database', 'dynamodb'])) {
+                $event->onOneServer();
+            }
+            if ($task->run_in_background) {
+                $event->runInBackground();
+            }
+        });
     }
 }

@@ -97,12 +97,12 @@ class Totem
         try {
             $cache = Cache::store(config('totem.cache_store'));
 
-            if ($cache->get('totem.table.'.TOTEM_TABLE_PREFIX.'tasks')) {
+            if ($cache->get('totem.table.'.config('totem.table_prefix', '').'tasks')) {
                 return true;
             }
 
-            if (Schema::hasTable(TOTEM_TABLE_PREFIX.'tasks')) {
-                $cache->forever('totem.table.'.TOTEM_TABLE_PREFIX.'tasks', true);
+            if (Schema::hasTable(config('totem.table_prefix', '').'tasks')) {
+                $cache->forever('totem.table.'.config('totem.table_prefix', '').'tasks', true);
 
                 return true;
             }

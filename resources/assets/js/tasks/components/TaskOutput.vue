@@ -18,22 +18,13 @@
         </uikit-modal>
     </span>
 </template>
-<script>
-    import UIKitModal from '../../components/UIKitModal.vue'
-    export default {
-        name: 'TaskOutput',
-        components: {
-            'uikit-modal':UIKitModal
-        },
-        props: {
-            output: {
-                type: String
-            }
-        },
-        data() {
-            return {
-                showModal: false,
-            };
-        }
-    }
+<script setup>
+import { ref } from 'vue';
+import UIKitModal from '../../components/UIKitModal.vue';
+
+const props = defineProps({
+    output: { type: String, default: '' },
+});
+
+const showModal = ref(false);
 </script>

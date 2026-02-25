@@ -9,40 +9,31 @@
   </span>
 </template>
 
-<script>
-  import UIkit from 'uikit';
-  export default {
-    props: {
-      url: {
-        type: String,
-        required: true
-      },
-    },
-    data() {
-      return {
-        importing: false,
-      }
-    },
-    computed: {
-    },
-    methods: {
-    },
-    mounted() {
-      UIkit.upload('.js-upload', {
-        url: this.url,
-        method: "POST",
-        name: "tasks",
-        beforeSend: function (environment) {
-          environment.headers['X-CSRF-TOKEN'] = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
+<script setup>
+import { ref, onMounted } from 'vue';
+import UIkit from 'uikit';
+
+const props = defineProps({
+    url: { type: String, required: true },
+});
+
+const importing = ref(false);
+
+onMounted(() => {
+    UIkit.upload('.js-upload', {
+        url: props.url,
+        method: 'POST',
+        name: 'tasks',
+        beforeSend(environment) {
+            environment.headers['X-CSRF-TOKEN'] = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         },
-        beforeAll: function () {
-          this.importing = true;
+        beforeAll() {
+            importing.value = true;
         },
-        completeAll: function () {
-          this.importing = false;
-          window.location.reload(true);
-        }
-      });
-    }
-  }
+        completeAll() {
+            importing.value = false;
+            window.location.reload(true);
+        },
+    });
+});
 </script>

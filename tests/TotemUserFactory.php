@@ -1,16 +1,15 @@
 <?php
 
-namespace Database\Factories;
+namespace Studio\Totem\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Studio\Totem\User;
 
 class TotemUserFactory extends Factory
 {
-    protected $model = User::class;
+    protected $model = TestUser::class;
 
-    public function definition()
+    public function definition(): array
     {
         static $password;
 

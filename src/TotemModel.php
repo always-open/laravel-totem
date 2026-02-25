@@ -3,21 +3,23 @@
 namespace Studio\Totem;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class TotemModel extends Model
 {
-    protected $connection = TOTEM_DATABASE_CONNECTION;
+    public function getConnectionName(): ?string
+    {
+        return config('totem.database_connection') ?? config('database.default');
+    }
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
-        if (Str::contains(parent::getTable(), TOTEM_TABLE_PREFIX)) {
-            return parent::getTable();
+        $prefix = config('totem.table_prefix', '');
+        $table = parent::getTable();
+
+        if ($prefix !== '' && str_starts_with($table, $prefix)) {
+            return $table;
         }
 
-        return TOTEM_TABLE_PREFIX.parent::getTable();
+        return $prefix.$table;
     }
 }

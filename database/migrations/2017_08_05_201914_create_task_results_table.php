@@ -13,8 +13,8 @@ class CreateTaskResultsTable extends TotemMigration
      */
     public function up()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->create(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
+        Schema::connection($this->getConnection())
+            ->create($this->prefix().'task_results', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('task_id');
                 $table->timestamp('ran_at')->useCurrent();
@@ -31,7 +31,7 @@ class CreateTaskResultsTable extends TotemMigration
      */
     public function down()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->dropIfExists(TOTEM_TABLE_PREFIX.'task_results');
+        Schema::connection($this->getConnection())
+            ->dropIfExists($this->prefix().'task_results');
     }
 }

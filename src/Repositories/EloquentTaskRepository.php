@@ -31,7 +31,7 @@ class EloquentTaskRepository implements TaskInterface
     {
         $result = new Result;
 
-        return (new Task)->select(TOTEM_TABLE_PREFIX.'tasks.*')
+        return (new Task)->select(config('totem.table_prefix', '').'tasks.*')
             ->selectSub(
                 $result->getLastRun(),
                 'last_ran_at'
@@ -108,6 +108,7 @@ class EloquentTaskRepository implements TaskInterface
         Creating::dispatch($input);
 
         $task->fill(Arr::only($input, $task->getFillable()))->save();
+        $task->afterSave($input);
 
         Created::dispatch($task);
 
@@ -128,6 +129,7 @@ class EloquentTaskRepository implements TaskInterface
         Updating::dispatch($input, $task);
 
         $task->fill(Arr::only($input, $task->getFillable()))->save();
+        $task->afterSave($input);
 
         Updated::dispatch($task);
 

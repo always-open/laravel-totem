@@ -72,7 +72,7 @@ class Task extends TotemModel
      */
     public function getUpcomingAttribute(): string
     {
-        return CronExpression::factory($this->getCronExpression())->getNextRunDate()->format('Y-m-d H:i:s');
+        return (new CronExpression($this->getCronExpression()))->getNextRunDate()->format('Y-m-d H:i:s');
     }
 
     /**
@@ -170,11 +170,11 @@ class Task extends TotemModel
     }
 
     /**
-     * Route notifications for the Nexmo channel.
+     * Route notifications for the Vonage channel.
      *
      * @return string
      */
-    public function routeNotificationForNexmo(): string
+    public function routeNotificationForVonage(): string
     {
         return $this->notification_phone_number;
     }
@@ -192,7 +192,7 @@ class Task extends TotemModel
     /**
      * Attempt to perform clean on task results.
      */
-    public function autoCleanup()
+    public function autoCleanup(): void
     {
         if ($this->auto_cleanup_num > 0) {
             if ($this->auto_cleanup_type === 'results') {

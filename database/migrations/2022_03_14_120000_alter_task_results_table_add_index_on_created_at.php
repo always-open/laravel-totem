@@ -13,8 +13,8 @@ class AlterTaskResultsTableAddIndexOnCreatedAt extends TotemMigration
      */
     public function up()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
+        Schema::connection($this->getConnection())
+            ->table($this->prefix().'task_results', function (Blueprint $table) {
                 $table->index('created_at');
             });
     }
@@ -26,9 +26,9 @@ class AlterTaskResultsTableAddIndexOnCreatedAt extends TotemMigration
      */
     public function down()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
-                $table->dropIndex(TOTEM_TABLE_PREFIX.'task_results_created_at_index');
+        Schema::connection($this->getConnection())
+            ->table($this->prefix().'task_results', function (Blueprint $table) {
+                $table->dropIndex($this->prefix().'task_results_created_at_index');
             });
     }
 }

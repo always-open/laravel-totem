@@ -28,25 +28,19 @@ class Result extends TotemModel
         return $this->belongsTo(Task::class);
     }
 
-    /**
-     * @return Builder
-     */
     public function getLastRun(): Builder
     {
         return $this->select('ran_at')
-            ->whereColumn('task_id', TOTEM_TABLE_PREFIX.'tasks.id')
+            ->whereColumn('task_id', config('totem.table_prefix', '').'tasks.id')
             ->latest()
             ->limit(1)
             ->getQuery();
     }
 
-    /**
-     * @return Builder
-     */
     public function getAverageRunTime(): Builder
     {
         return $this->select(DB::raw('avg(duration)'))
-            ->whereColumn('task_id', TOTEM_TABLE_PREFIX.'tasks.id')
+            ->whereColumn('task_id', config('totem.table_prefix', '').'tasks.id')
             ->getQuery();
     }
 
