@@ -5,6 +5,9 @@ import { resolve } from 'path';
 export default defineConfig({
     plugins: [vue()],
     publicDir: false,
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    },
     build: {
         lib: {
             entry: resolve(__dirname, 'resources/assets/js/app.js'),

@@ -8,7 +8,7 @@
                 <h3>Output</h3>
             </div>
             <div class="uk-modal-body uk-overflow-auto uk-height-max-large">
-                <div v-html="output"></div>
+                <pre style="white-space: pre-wrap; word-break: break-word;">{{ output }}</pre>
             </div>
             <div class="uk-modal-footer">
                 <div class="uk-flex uk-flex-right">

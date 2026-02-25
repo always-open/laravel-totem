@@ -26,8 +26,10 @@ class BustCacheImmediately
     {
         $cache = Cache::store(config('totem.cache_store'));
 
-        if ($event->taskId) {
-            $cache->forget('totem.task.'.$event->taskId);
+        $taskId = $event->taskId ?? ($event->task->id ?? null);
+
+        if ($taskId) {
+            $cache->forget('totem.task.'.$taskId);
         }
 
         $cache->forget('totem.tasks.all');

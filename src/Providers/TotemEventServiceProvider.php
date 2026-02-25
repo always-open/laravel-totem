@@ -16,9 +16,9 @@ class TotemEventServiceProvider extends EventServiceProvider
 {
     protected $listen = [
         Created::class => [BustCache::class, BuildCache::class],
-        Updated::class => [BustCache::class, BuildCache::class],
-        Activated::class => [BustCache::class, BuildCache::class],
-        Deactivated::class => [BustCache::class, BuildCache::class],
+        Updated::class => [BustCacheImmediately::class, BustCache::class, BuildCache::class],
+        Activated::class => [BustCacheImmediately::class, BustCache::class, BuildCache::class],
+        Deactivated::class => [BustCacheImmediately::class, BustCache::class, BuildCache::class],
         Deleting::class => [BustCacheImmediately::class],
     ];
 }

@@ -1,18 +1,20 @@
 <template>
-    <transition mode="out-in">
-        <div
-            v-if="show"
-            class="uk-modal uk-flex-top uk-open uk-display-block"
-            @click="close"
-        >
-            <div class="uk-modal-dialog uk-margin-auto-vertical" @click.stop>
-                <button class="uk-button uk-button-link uk-modal-close-default" @click="close">
-                    <span uk-icon="icon: close"></span>
-                </button>
-                <slot></slot>
+    <Teleport to="body">
+        <transition mode="out-in">
+            <div
+                v-if="show"
+                class="uk-modal uk-flex-top uk-open uk-display-block"
+                @click="close"
+            >
+                <div class="uk-modal-dialog uk-margin-auto-vertical" @click.stop>
+                    <button class="uk-button uk-button-link uk-modal-close-default" @click="close">
+                        <span uk-icon="icon: close"></span>
+                    </button>
+                    <slot></slot>
+                </div>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </Teleport>
 </template>
 
 <script setup>
