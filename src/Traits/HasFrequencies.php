@@ -54,7 +54,8 @@ trait HasFrequencies
                 }
 
                 foreach ($input['frequencies'] as $_frequency) {
-                    $this->frequencies()->updateOrCreate(Arr::only($_frequency, ['task_id', 'label', 'interval']));
+                    $frequency = $this->frequencies()->updateOrCreate(Arr::only($_frequency, ['task_id', 'label', 'interval']));
+                    $frequency->afterSave($input);
                 }
             } else {
                 $this->frequencies->each(function ($frequency) {
