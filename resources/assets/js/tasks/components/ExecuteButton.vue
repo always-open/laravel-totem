@@ -10,48 +10,32 @@
   </transition>
 </template>
 
-<script>
-  export default {
-    props: {
-      dataTask: {},
-      url: {
-        type: String,
-        required: true
-      },
-      iconName: {
-        type: String,
-        default: null
-      },
-      buttonClass: {
-        type: String,
-        default: 'uk-button-small'
-      }
-    },
-    data() {
-      return {
-        running: false,
-        task: this.dataTask
-      }
-    },
-    computed: {
-      buttonClasses() {
-        return this.running ? 'uk-spinner uk-icon' : this.buttonClass;
-      }
-    },
-    methods: {
-      execute() {
-        this.running = true;
+<script setup>
+import { ref, computed } from 'vue';
+import { takeAtLeast } from '../../utils/takeAtLeast.js';
 
-        axios.get(this.url)
-            .takeAtLeast(500)
-            .then(response => {
-              this.task = response.data;
-              this.running = false;
-              this.$emit('taskExecuted', this.task);
-            })
-      }
-    },
-    mounted() {
+const props = defineProps({
+    dataTask: {},
+    url: { type: String, required: true },
+    iconName: { type: String, default: null },
+    buttonClass: { type: String, default: 'uk-button-small' },
+});
+
+const emit = defineEmits(['taskExecuted']);
+
+const running = ref(false);
+const task = ref(props.dataTask);
+
+const buttonClasses = computed(() => running.value ? 'uk-spinner uk-icon' : props.buttonClass);
+
+async function execute() {
+    running.value = true;
+    try {
+        const response = await takeAtLeast(axios.get(props.url), 500);
+        task.value = response.data;
+        emit('taskExecuted', task.value);
+    } finally {
+        running.value = false;
     }
-  }
+}
 </script>

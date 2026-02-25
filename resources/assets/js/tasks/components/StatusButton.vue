@@ -11,71 +11,45 @@
   </transition>
 </template>
 
-<script>
-  export default {
-    props: {
-      dataTask: {
-        type: Object,
-        default: null
-      },
-      dataExists : {
-        type: Boolean,
-        required: false
-      },
-      activateUrl : {
-        type: String,
-        required: true
-      },
-      deactivateUrl : {
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {
-        hovering: false,
-        working: false,
-        task: this.dataTask,
-        exists: this.dataExists,
-      }
-    },
-    computed: {
-      inActiveStatusText() {
-        return this.hovering ? 'Enable' : 'Disabled'
-      },
-      activeStatusText() {
-        return this.hovering ? 'Disable' : 'Enabled'
-      },
-      existsAndIsInActive() {
-        return !this.task.activated && this.exists;
-      }
-    },
-    methods: {
-      activate() {
-        this.working = true;
+<script setup>
+import { ref, computed } from 'vue';
+import { takeAtLeast } from '../../utils/takeAtLeast.js';
 
-        axios.post(this.activateUrl, {
-          task_id: this.dataTask.id
-        }).takeAtLeast(500)
-            .then(response => {
-              this.task = response.data;
-              this.working = false;
-              this.hovering = false
-            })
-      },
-      deactivate() {
-        this.working = true;
+const props = defineProps({
+    dataTask: { type: Object, default: null },
+    dataExists: { type: Boolean, default: false },
+    activateUrl: { type: String, required: true },
+    deactivateUrl: { type: String, required: true },
+});
 
-        axios.delete(this.deactivateUrl)
-            .takeAtLeast(500)
-            .then(response => {
-              this.task = response.data;
-              this.working = false;
-              this.hovering = false
-            })
-      },
-    },
-    mounted() {
+const hovering = ref(false);
+const working = ref(false);
+const task = ref(props.dataTask);
+const exists = ref(props.dataExists);
+
+const inActiveStatusText = computed(() => hovering.value ? 'Enable' : 'Disabled');
+const activeStatusText = computed(() => hovering.value ? 'Disable' : 'Enabled');
+const existsAndIsInActive = computed(() => !task.value.activated && exists.value);
+
+async function activate() {
+    working.value = true;
+    try {
+        const response = await takeAtLeast(axios.post(props.activateUrl, { task_id: props.dataTask.id }), 500);
+        task.value = response.data;
+    } finally {
+        working.value = false;
+        hovering.value = false;
     }
-  }
+}
+
+async function deactivate() {
+    working.value = true;
+    try {
+        const response = await takeAtLeast(axios.delete(props.deactivateUrl), 500);
+        task.value = response.data;
+    } finally {
+        working.value = false;
+        hovering.value = false;
+    }
+}
 </script>

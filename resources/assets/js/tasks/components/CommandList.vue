@@ -8,7 +8,7 @@
                     <label>
                         <input class="uk-input"
                                type="search"
-                               v-model="search"
+                               v-model="searchText"
                                ref="search"
                                @keydown.esc="close"
                                @keydown.down="highlightNext"
@@ -26,14 +26,14 @@
                         {{ option.name }}
                         <em class="uk-padding-small uk-padding-remove-top uk-padding-remove-bottom uk-padding-remove-right">
                             {{option.description}}
-                        </em> 
+                        </em>
                     </li>
                 </ul>
                 <div v-show="filteredOptions.length <= 0" class="uk-padding-small">
-                    No results found for "{{ search }}"
+                    No results found for "{{ searchText }}"
                 </div>
             </div>
-        </div>        
+        </div>
     </click-to-close>
 </template>
 
@@ -46,78 +46,67 @@
     }
 </style>
 
-<script>
-  import ClickToClose from "../../components/ClickToClose";
-  export default {
-    name: 'CommandList',
-    components: {ClickToClose},
-    props: ['command', 'commands'],
-    data() {
-      return {
-        selected: decodeURI(this.command),
-        options: Object.values(this.commands),
-        isOpen: false,
-        search: '',
-        highlightedIndex: 0
-      };
-    },
-    computed: {
-      filteredOptions() {
-        return this.options.filter(option => option.name.toLowerCase().includes(this.search.toLowerCase()));
-      }
-    },
-    methods: {
-      open() {
-        if (this.isOpen) {
-          return;
-        }
+<script setup>
+import { ref, computed, nextTick } from 'vue';
+import ClickToClose from '../../components/ClickToClose.vue';
 
-        this.isOpen = true;
-        this.highlightedIndex = this.options.findIndex(option => option.name === this.selected);
-        this.$nextTick(() => {
-          this.$refs.search.focus();
-          this.scrollToHighlighted();
-        });
-      },
-      close() {
-        if (!this.isOpen) {
-          return;
-        }
+const props = defineProps({
+    command: { type: String, default: '' },
+    commands: { type: [Array, Object], default: () => [] },
+});
 
-        this.isOpen = false;
-        this.$refs.input.focus();
-      },
-      select(option) {
-        this.selected = option.name;
-        this.search = '';
-        this.highlightedIndex = 0;
-        this.close();
-      },
-      selectHighlighted() {
-        this.select(this.filteredOptions[this.highlightedIndex]);
-      },
-      scrollToHighlighted() {
-        this.$refs.options.children[this.highlightedIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-      },
-      highlight(index) {
-        this.highlightedIndex = index;
+const input = ref(null);
+const search = ref(null);
+const options = ref(null);
 
-        if (this.highlightedIndex < 0) {
-          this.highlightedIndex = this.filteredOptions.length - 1;
-        }
+const selected = ref(decodeURI(props.command));
+const allOptions = ref(Object.values(props.commands));
+const isOpen = ref(false);
+const searchText = ref('');
+const highlightedIndex = ref(0);
 
-        if (this.highlightedIndex > this.filteredOptions.length - 1) {
-          this.highlightedIndex = 0;
-        }
+const filteredOptions = computed(() =>
+    allOptions.value.filter(option => option.name.toLowerCase().includes(searchText.value.toLowerCase()))
+);
 
-        this.scrollToHighlighted();
-      },
-      highlightNext() {
-        this.highlight(this.highlightedIndex + 1);
-      },
-      highlightPrev() {
-        this.highlight(this.highlightedIndex - 1);
-      }  
-    }    
-  };
+function open() {
+    if (isOpen.value) return;
+    isOpen.value = true;
+    highlightedIndex.value = allOptions.value.findIndex(o => o.name === selected.value);
+    nextTick(() => {
+        search.value?.focus();
+        scrollToHighlighted();
+    });
+}
+
+function close() {
+    if (!isOpen.value) return;
+    isOpen.value = false;
+    input.value?.focus();
+}
+
+function select(option) {
+    selected.value = option.name;
+    searchText.value = '';
+    highlightedIndex.value = 0;
+    close();
+}
+
+function selectHighlighted() {
+    select(filteredOptions.value[highlightedIndex.value]);
+}
+
+function scrollToHighlighted() {
+    options.value?.children[highlightedIndex.value]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+}
+
+function highlight(index) {
+    highlightedIndex.value = index;
+    if (highlightedIndex.value < 0) highlightedIndex.value = filteredOptions.value.length - 1;
+    if (highlightedIndex.value > filteredOptions.value.length - 1) highlightedIndex.value = 0;
+    scrollToHighlighted();
+}
+
+function highlightNext() { highlight(highlightedIndex.value + 1); }
+function highlightPrev() { highlight(highlightedIndex.value - 1); }
 </script>

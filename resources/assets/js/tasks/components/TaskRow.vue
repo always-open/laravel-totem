@@ -30,51 +30,28 @@
     </tr>
 </template>
 
-<script>
-    import moment from 'moment'
-    import ExecuteButton from './ExecuteButton'
+<script setup>
+import { ref, computed } from 'vue';
+import dayjs from 'dayjs';
+import ExecuteButton from './ExecuteButton.vue';
 
-    export default {
-        components: {
-            ExecuteButton
-        },
+const props = defineProps({
+    dataTask: {},
+    showHref: { type: String, default: '' },
+    executeHref: { type: String, default: '' },
+});
 
-        props: {
-            dataTask: {},
-        },
+const task = ref(props.dataTask);
 
-        data() {
-            return {
-                task: this.dataTask
-            }
-        },
+const description = computed(() => task.value.description.substring(0, 29));
+const averageDurationInSeconds = computed(() =>
+    task.value.average_runtime > 0 ? (task.value.average_runtime / 1000).toFixed(2) : 0
+);
+const lastRunDate = computed(() =>
+    dayjs(task.value.last_result.ran_at).format('YYYY-MM-DD HH:mm:ss')
+);
 
-        computed: {
-            description() {
-                return this.task.description.substring(0,29);
-            },
-
-            averageDurationInSeconds() {
-                return this.task.average_runtime > 0 ? (this.task.average_runtime / 1000).toFixed(2) : 0;
-            },
-
-            lastRunDate() {
-                return moment(this.task.last_result.ran_at).format('YYYY-MM-DD HH:mm:ss');
-            },
-
-            showHref() {
-                return this.$attrs.showhref;
-            },
-
-            executeHref() {
-                return this.$attrs.executehref;
-            }
-        },
-
-        methods: {
-            refreshTask(task) {
-                this.task = task;
-            }
-        }
-    }
+function refreshTask(updatedTask) {
+    task.value = updatedTask;
+}
 </script>
