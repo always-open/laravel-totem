@@ -43,6 +43,4 @@ trait HasParameters
     {
         return $this->hasMany(Parameter::class);
     }
-
-
 }

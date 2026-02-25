@@ -14,7 +14,9 @@ class TaskCompleted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private readonly string $output) {}
+    public function __construct(private readonly string $output)
+    {
+    }
 
     public function via(mixed $notifiable): array
     {
