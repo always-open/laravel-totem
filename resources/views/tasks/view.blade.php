@@ -87,7 +87,7 @@
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <span>
             <a href="{{ route('totem.task.edit', ['totemTask' => $task]) }}" class="uk-button uk-button-primary uk-button-small">Edit</a>
-            <form class="uk-display-inline" action="{{route('totem.task.delete', ['totemTask' => $task])}}" method="post">
+            <form class="uk-display-inline" action="{{route('totem.task.delete', ['totemTask' => $task])}}" method="post" onsubmit="return confirm('Are you sure you want to delete this task?')">
                 {{ csrf_field() }}
                 {{ method_field('delete') }}
                 <button type="submit" class="uk-button uk-button-danger uk-button-small">Delete</button>
