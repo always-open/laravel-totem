@@ -35,11 +35,11 @@
         </thead>
         <tbody>
             @forelse($tasks as $task)
-                <task-row
+                <tr is="vue:task-row"
                     :data-task="{{ $task }}"
                     show-href="{{ route('totem.task.view', ['totemTask' => $task]) }}"
                     execute-href="{{ route('totem.task.execute', ['totemTask' => $task]) }}"
-                ></task-row>
+                ></tr>
             @empty
                 <tr>
                     <td class="uk-text-center" colspan="5">
