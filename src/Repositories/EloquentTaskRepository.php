@@ -31,7 +31,7 @@ class EloquentTaskRepository implements TaskInterface
     {
         $result = new Result;
 
-        return (new Task)->select(TOTEM_TABLE_PREFIX.'tasks.*')
+        return (new Task)->select(config('totem.table_prefix', '').'tasks.*')
             ->selectSub(
                 $result->getLastRun(),
                 'last_ran_at'

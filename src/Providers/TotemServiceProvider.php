@@ -44,18 +44,6 @@ class TotemServiceProvider extends ServiceProvider
             'totem'
         );
 
-        if (! defined('TOTEM_PATH')) {
-            define('TOTEM_PATH', realpath(__DIR__.'/../../'));
-        }
-
-        if (! defined('TOTEM_TABLE_PREFIX')) {
-            define('TOTEM_TABLE_PREFIX', config('totem.table_prefix'));
-        }
-
-        if (! defined('TOTEM_DATABASE_CONNECTION')) {
-            define('TOTEM_DATABASE_CONNECTION', config('totem.database_connection', config('database.default')));
-        }
-
         $this->commands([
             ListSchedule::class,
             PublishAssets::class,
@@ -88,23 +76,23 @@ class TotemServiceProvider extends ServiceProvider
     public function defineAssetPublishing()
     {
         $this->publishes([
-            TOTEM_PATH.'/public/js' => public_path('vendor/totem/js'),
+            __DIR__.'/../../public/js' => public_path('vendor/totem/js'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/public/css' => public_path('vendor/totem/css'),
+            __DIR__.'/../../public/css' => public_path('vendor/totem/css'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/public/img' => public_path('vendor/totem/img'),
+            __DIR__.'/../../public/img' => public_path('vendor/totem/img'),
         ], 'totem-assets');
 
         $this->publishes([
-            TOTEM_PATH.'/resources/views' => resource_path('views/vendor/totem'),
+            __DIR__.'/../../resources/views' => resource_path('views/vendor/totem'),
         ], 'totem-views');
 
         $this->publishes([
-            TOTEM_PATH.'/config' => config_path(),
+            __DIR__.'/../../config' => config_path(),
         ], 'totem-config');
     }
 }

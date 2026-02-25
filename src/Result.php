@@ -34,7 +34,7 @@ class Result extends TotemModel
     public function getLastRun(): Builder
     {
         return $this->select('ran_at')
-            ->whereColumn('task_id', TOTEM_TABLE_PREFIX.'tasks.id')
+            ->whereColumn('task_id', config('totem.table_prefix', '').'tasks.id')
             ->latest()
             ->limit(1)
             ->getQuery();
@@ -46,7 +46,7 @@ class Result extends TotemModel
     public function getAverageRunTime(): Builder
     {
         return $this->select(DB::raw('avg(duration)'))
-            ->whereColumn('task_id', TOTEM_TABLE_PREFIX.'tasks.id')
+            ->whereColumn('task_id', config('totem.table_prefix', '').'tasks.id')
             ->getQuery();
     }
 

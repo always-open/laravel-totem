@@ -13,8 +13,8 @@ class AlterTasksTableAddRunOnOneServerSupport extends TotemMigration
      */
     public function up()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
+        Schema::connection($this->getConnection())
+            ->table($this->prefix().'tasks', function (Blueprint $table) {
                 $table->boolean('run_on_one_server')->default(false);
             });
     }
@@ -26,8 +26,8 @@ class AlterTasksTableAddRunOnOneServerSupport extends TotemMigration
      */
     public function down()
     {
-        Schema::connection(TOTEM_DATABASE_CONNECTION)
-            ->table(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
+        Schema::connection($this->getConnection())
+            ->table($this->prefix().'tasks', function (Blueprint $table) {
                 $table->dropColumn('run_on_one_server');
             });
     }

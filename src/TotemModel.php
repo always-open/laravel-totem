@@ -7,17 +7,16 @@ use Illuminate\Support\Str;
 
 class TotemModel extends Model
 {
-    protected $connection = TOTEM_DATABASE_CONNECTION;
+    public function getConnectionName(): ?string
+    {
+        return config('totem.database_connection', config('database.default'));
+    }
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
-        if (Str::contains(parent::getTable(), TOTEM_TABLE_PREFIX)) {
-            return parent::getTable();
-        }
+        $prefix = config('totem.table_prefix', '');
+        $table = parent::getTable();
 
-        return TOTEM_TABLE_PREFIX.parent::getTable();
+        return Str::startsWith($table, $prefix) ? $table : $prefix.$table;
     }
 }
