@@ -2,7 +2,7 @@
   <img src="https://github.com/codestudiohq/laravel-totem/blob/8.0/resources/assets/img/totem.png?raw=true" alt="Laravel Totem"/>
 </p>
 <p align="center">
-<img src="https://github.com/always-open/laravel-totem/workflows/Laravel/badge.svg?branch=11.x" alt="Build Status">
+<img src="https://github.com/always-open/laravel-totem/workflows/Laravel/badge.svg?branch=13.x" alt="Build Status">
 <a href="https://packagist.org/packages/studio/laravel-totem"><img src="https://poser.pugx.org/studio/laravel-totem/license.svg" alt="License"></a>
 </p>
 
@@ -16,13 +16,14 @@ Manage your `Laravel Schedule` from a pretty dashboard. Schedule your `Laravel C
 
 | <span align="left">Laravel</span> | <span align="left">Totem</span> |
 |:----------------------------------|--------------------------------:|
+| 13.x                              |                            13.x |
 | 12.x                              |                            11.x |
 | 11.x                              |                            11.x |
 
 #### Requirements
 
 - PHP 8.2+
-- Laravel 11.x or 12.x
+- Laravel 11.x, 12.x, or 13.x
 
 #### Installing
 
