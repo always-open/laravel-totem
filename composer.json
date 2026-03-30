@@ -22,17 +22,17 @@
   "require": {
     "php": "^8.2.0",
     "ext-json": "*",
-    "illuminate/bus": "^10.0|^11.0|^12.0",
-    "illuminate/console": "^10.0|^11.0|^12.0",
-    "illuminate/contracts": "^10.0|^11.0|^12.0",
-    "illuminate/database": "^10.0|^11.0|^12.0",
-    "illuminate/events": "^10.0|^11.0|^12.0",
-    "illuminate/notifications": "^10.0|^11.0|^12.0"
+    "illuminate/bus": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/console": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/events": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/notifications": "^10.0|^11.0|^12.0|^13.0"
   },
   "require-dev": {
     "laravel/slack-notification-channel": "^3.7",
     "laravel/vonage-notification-channel": "^3.3",
-    "orchestra/testbench": "^8.0|^9.0|^10.0",
+    "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
     "phpunit/phpunit": "^10.0|^11.0|^12.0"
   },
   "suggest": {

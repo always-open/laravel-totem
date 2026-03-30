@@ -4,6 +4,11 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ---
 
+## v13.0.0 - 03/30/2026
+
+- Add Laravel 13.x Support
+- Update Change Log
+
 ## v12.0.2 - 04/21/2026
 
 ### Fixed
