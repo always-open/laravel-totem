@@ -5,33 +5,74 @@ on: [push, pull_request]
 jobs:
   laravel-tests:
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        php: [ 8.2, 8.3, 8.4 ]
-        laravel: [ 11.*, 12.* ]
-        stability: [ prefer-stable ]
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+        os: [ubuntu-latest]
+        php: ['8.3', '8.4']
+        laravel: ['12.*', '13.*']
+        dependencies: [prefer-lowest, prefer-stable]
+        experimental: [false]
+        include:
+          # PHP 8.5 non-blocking smoke — 4 combos, all experimental
+          - { os: ubuntu-latest, php: '8.5', laravel: '12.*', dependencies: prefer-lowest,  experimental: true }
+          - { os: ubuntu-latest, php: '8.5', laravel: '12.*', dependencies: prefer-stable,  experimental: true }
+          - { os: ubuntu-latest, php: '8.5', laravel: '13.*', dependencies: prefer-lowest,  experimental: true }
+          - { os: ubuntu-latest, php: '8.5', laravel: '13.*', dependencies: prefer-stable,  experimental: true }
+    name: "PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependencies }}${{ matrix.experimental && ' (experimental)' || '' }}"
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-        coverage: none
-    - name: Cache dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.composer/cache/files
-        key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.php }}-composer-
-    - name: Install dependencies
-      run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-        composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
-      run: vendor/bin/phpunit
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php${{ matrix.php }}-L${{ matrix.laravel }}-${{ matrix.dependencies }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php${{ matrix.php }}-L${{ matrix.laravel }}-${{ matrix.dependencies }}-
+            ${{ runner.os }}-php${{ matrix.php }}-
+
+      - name: Pin Laravel version for this job
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+
+      - name: Install dependencies (${{ matrix.dependencies }})
+        run: |
+          composer update --${{ matrix.dependencies }} --prefer-dist --no-interaction
+
+      - name: Verify Laravel floor (prefer-lowest only)
+        if: matrix.dependencies == 'prefer-lowest' && matrix.experimental != true
+        run: |
+          set -euo pipefail
+          resolved=$(composer show laravel/framework --format=json | php -r 'echo json_decode(stream_get_contents(STDIN), true)["versions"][0];' | sed 's/^v//')
+          case "${{ matrix.laravel }}" in
+            12.*) min="12.0.0" ;;
+            13.*) min="13.0.0" ;;
+            *) echo "Unknown Laravel major: ${{ matrix.laravel }}"; exit 1 ;;
+          esac
+          R="$resolved" M="$min" php -r '
+            $r = getenv("R");
+            $m = getenv("M");
+            if ($r === "" || $m === "") {
+              fwrite(STDERR, "Version extraction failed (resolved=\"$r\", min=\"$m\")\n");
+              exit(2);
+            }
+            if (version_compare($r, $m, "<")) {
+              fwrite(STDERR, "laravel/framework resolved to $r, below declared floor $m for Laravel ${{ matrix.laravel }}\n");
+              exit(1);
+            }
+            echo "laravel/framework resolved to $r (floor $m) -- ok\n";
+          '
+
+      - name: Execute tests (PHPUnit)
+        # PR 2 uses PHPUnit; PR 3 replaces this with `vendor/bin/pest`.
+        run: vendor/bin/phpunit
