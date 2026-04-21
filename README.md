@@ -2,7 +2,7 @@
   <img src="https://github.com/codestudiohq/laravel-totem/blob/8.0/resources/assets/img/totem.png?raw=true" alt="Laravel Totem"/>
 </p>
 <p align="center">
-<img src="https://github.com/always-open/laravel-totem/workflows/Laravel/badge.svg?branch=11.x" alt="Build Status">
+<img src="https://github.com/always-open/laravel-totem/workflows/Laravel/badge.svg?branch=13.x" alt="Build Status">
 <a href="https://packagist.org/packages/studio/laravel-totem"><img src="https://poser.pugx.org/studio/laravel-totem/license.svg" alt="License"></a>
 </p>
 
@@ -14,15 +14,23 @@ Manage your `Laravel Schedule` from a pretty dashboard. Schedule your `Laravel C
 
 #### Compatibility Matrix
 
-| <span align="left">Laravel</span> | <span align="left">Totem</span> |
-|:----------------------------------|--------------------------------:|
-| 12.x                              |                            11.x |
-| 11.x                              |                            11.x |
+| Laravel | Totem | Notes                                        |
+|:--------|------:|:---------------------------------------------|
+| 13.x    | 13.x  | Current                                      |
+| 12.x    | 13.x  | Current release line — Laravel 13 runtime support |
+| 12.x    | 12.x  | Maintained                                   |
+| 11.x    | 12.x  | Maintained                                   |
+| 11.x    | 11.x  | Maintained                                   |
+| 10.x    | 11.x  | Maintained                                   |
 
 #### Requirements
 
-- PHP 8.2+
-- Laravel 11.x or 12.x
+- PHP 8.3+
+- Laravel 12.x or 13.x
+
+Earlier Totem majors are maintained for legacy Laravel support:
+- Totem 12.x supports Laravel 11.x and 12.x (PHP 8.2+).
+- Totem 11.x supports Laravel 10.x, 11.x, and 12.x (PHP 8.2+).
 
 #### Installing
 
