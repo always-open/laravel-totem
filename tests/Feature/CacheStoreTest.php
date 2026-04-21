@@ -3,6 +3,7 @@
 namespace Studio\Totem\Tests\Feature;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Queue;
 use Studio\Totem\Repositories\EloquentTaskRepository;
 use Studio\Totem\Tests\TestCase;
 
@@ -72,6 +73,7 @@ class CacheStoreTest extends TestCase
     public function test_updating_task_clears_route_binding_cache()
     {
         config(['totem.cache_store' => 'totem_store']);
+        Queue::fake();
 
         $task = \Studio\Totem\Task::factory()->create();
         Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
@@ -86,6 +88,7 @@ class CacheStoreTest extends TestCase
     public function test_activating_task_clears_route_binding_cache()
     {
         config(['totem.cache_store' => 'totem_store']);
+        Queue::fake();
 
         $task = \Studio\Totem\Task::factory()->create();
         Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
@@ -98,6 +101,7 @@ class CacheStoreTest extends TestCase
     public function test_deactivating_task_clears_route_binding_cache()
     {
         config(['totem.cache_store' => 'totem_store']);
+        Queue::fake();
 
         $task = \Studio\Totem\Task::factory()->create();
         Cache::store('totem_store')->forever('totem.task.'.$task->id, $task);
