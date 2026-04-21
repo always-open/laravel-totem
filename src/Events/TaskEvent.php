@@ -15,8 +15,11 @@ class TaskEvent extends Event
      */
     public Task $task;
 
+    public int $taskId;
+
     public function __construct(Task $task)
     {
         $this->task = $task;
+        $this->taskId = $task->id;
     }
 }

@@ -22,8 +22,8 @@ class BustCache extends Listener
     {
         $cache = Cache::store(config('totem.cache_store'));
 
-        if ($event->task) {
-            $cache->forget('totem.task.'.$event->task->id);
+        if (isset($event->taskId)) {
+            $cache->forget('totem.task.'.$event->taskId);
         }
 
         $cache->forget('totem.tasks.all');
