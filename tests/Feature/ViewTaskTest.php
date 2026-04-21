@@ -31,6 +31,7 @@ class ViewTaskTest extends TestCase
      *
      * Before v12.0.2, resources/views/tasks/view.blade.php used @json() to
      * bind the task result into the <task-output :output="..."> attribute.
+     *
      * @json() emits raw JSON whose outer `"` delimiters collide with the
      * attribute's own `"` wrappers, making the HTML malformed. Browsers
      * parse `:output=""hello""` as `:output=""` (empty) + orphan text, so
