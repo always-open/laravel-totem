@@ -117,7 +117,7 @@
                         <td>{{$result->ran_at->toDateTimeString()}}</td>
                         <td>{{ number_format($result->duration / 1000 , 2)}} seconds</td>
                         <td>
-                            <task-output :output="@json($result->result)"></task-output>
+                            <task-output :output="{{ \Illuminate\Support\Js::from($result->result) }}"></task-output>
                         </td>
                     </tr>
                 @empty
