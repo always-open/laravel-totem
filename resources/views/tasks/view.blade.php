@@ -59,7 +59,7 @@
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">Next Run Schedule</span>
-            <span class="uk-float-left">{{$task->upcoming }}</span>
+            <span class="uk-float-left">{{ $task->upcoming ?? 'Never' }}</span>
         </li>
         @if($task->dont_overlap)
             <li>

@@ -73,6 +73,15 @@ class ViewDashboardTest extends TestCase
         }
     }
 
+    public function test_view_dashboard_lists_a_task_whose_expression_never_matches()
+    {
+        $this->signIn();
+        $task = Task::factory()->create(['expression' => '0 0 31 2 *']);
+        $response = $this->get(route('totem.tasks.all'));
+        $response->assertStatus(200);
+        $response->assertSee($task->description);
+    }
+
     /**
      * @param  int  $task_count
      * @param  int  $result_count

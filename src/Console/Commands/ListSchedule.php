@@ -3,10 +3,10 @@
 namespace Studio\Totem\Console\Commands;
 
 use Carbon\Carbon;
-use Cron\CronExpression;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Str;
+use Studio\Totem\Totem;
 
 class ListSchedule extends Command
 {
@@ -66,11 +66,9 @@ class ListSchedule extends Command
     }
 
     /**
-     * Get Upcoming schedule.
-     *
-     * @return bool
+     * Get Upcoming schedule, or "Never" for an expression no date satisfies.
      */
-    protected function upcoming($event)
+    protected function upcoming($event): string
     {
         $date = Carbon::now();
 
@@ -78,6 +76,6 @@ class ListSchedule extends Command
             $date->setTimezone($event->timezone);
         }
 
-        return (new CronExpression($event->expression))->getNextRunDate($date->toDateTimeString())->format('Y-m-d H:i:s');
+        return Totem::nextRunDate($event->expression, $date->toDateTimeString())?->format('Y-m-d H:i:s') ?? 'Never';
     }
 }

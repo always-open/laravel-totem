@@ -50,4 +50,19 @@ class ExportTasksTest extends TestCase
             $this->assertEquals($task->average_runtime, $exportedTask->average_runtime);
         });
     }
+
+    public function test_it_exports_a_task_whose_expression_never_matches()
+    {
+        $task = Task::factory()->create(['expression' => '0 0 31 2 *']);
+
+        $response = $this->signIn()
+            ->get(route('totem.tasks.export'))
+            ->assertStatus(200);
+
+        $exportedTask = collect(json_decode($response->streamedContent()))
+            ->firstWhere('id', $task->id);
+
+        $this->assertEquals($task->expression, $exportedTask->expression);
+        $this->assertNull($exportedTask->upcoming);
+    }
 }
