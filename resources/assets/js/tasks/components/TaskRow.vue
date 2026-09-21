@@ -15,7 +15,7 @@
             <span class="uk-float-right uk-hidden@s uk-text-muted">Last Run</span>
         </td>
         <td>
-            {{task.upcoming}}
+            {{ task.upcoming ?? 'Never' }}
             <span class="uk-float-right uk-hidden@s uk-text-muted">Next Run</span>
         </td>
         <td class="uk-text-center@m">
