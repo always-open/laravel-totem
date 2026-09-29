@@ -6,23 +6,13 @@
 @section('title')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <h4 class="uk-card-title uk-margin-remove">Tasks</h4>
-        <form
-            accept-charset="UTF-8"
-            method="GET"
+        <task-search
             action="{{ request()->fullUrl() }}"
-            id="totem__search__form"
-            class="uk-display-inline uk-search uk-search-default">
-            <span uk-search-icon></span>
-            <input
-                value="{{ request('q') }}"
-                placeholder="Search..."
-                name="q"
-                type="text"
-                class="uk-search-input">
-        </form>
+            value="{{ request('q') }}"></task-search>
     </div>
 @stop
 @section('main-panel-content')
+    <task-search-region name="table">
     <table class="uk-table uk-table-responsive" cellpadding="0" cellspacing="0" class="mb1">
         <thead>
             <tr>
@@ -50,6 +40,7 @@
             @endforelse
         </tbody>
     </table>
+    </task-search-region>
 @stop
 @section('main-panel-footer')
     <div class="uk-flex uk-flex-between">
@@ -64,5 +55,7 @@
             <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.tasks.export')}}">Export</a>
         </span>
     </div>
-    {{$tasks->links('totem::partials.pagination', ['params' => '&' . http_build_query(array_filter(request()->except('page')))])}}
+    <task-search-region name="pagination">
+        {{$tasks->links('totem::partials.pagination', ['params' => '&' . http_build_query(array_filter(request()->except('page')))])}}
+    </task-search-region>
 @stop
