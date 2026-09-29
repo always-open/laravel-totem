@@ -30,6 +30,8 @@ class TasksController extends Controller
      */
     public function index(): View
     {
+        $search = is_string(request('q')) ? request()->string('q')->lower()->toString() : '';
+
         return view('totem::tasks.index', [
             'tasks' => $this->tasks
                 ->builder()
@@ -38,8 +40,8 @@ class TasksController extends Controller
                     'last_ran_at',
                     'average_runtime',
                 ], ['description' => 'asc'])
-                ->when(request('q'), function (Builder $query) {
-                    $query->whereRaw('LOWER(description) LIKE ?', ['%'.mb_strtolower(request('q')).'%']);
+                ->when($search, function (Builder $query, string $search) {
+                    $query->whereRaw('LOWER(description) LIKE ?', ['%'.$search.'%']);
                 })
                 ->with('frequencies')
                 ->paginate(20),

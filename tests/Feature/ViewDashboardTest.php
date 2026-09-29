@@ -94,6 +94,18 @@ class ViewDashboardTest extends TestCase
         $response->assertDontSee('Send Reports');
     }
 
+    public function test_search_with_array_query_is_ignored()
+    {
+        $this->signIn();
+        Task::factory()->create(['description' => 'Nightly Backup']);
+        Task::factory()->create(['description' => 'Send Reports']);
+
+        $response = $this->get(route('totem.tasks.all', ['q' => ['nightly']]));
+        $response->assertStatus(200);
+        $response->assertSee('Nightly Backup');
+        $response->assertSee('Send Reports');
+    }
+
     /**
      * @param  int  $task_count
      * @param  int  $result_count
