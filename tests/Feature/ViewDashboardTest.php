@@ -73,6 +73,39 @@ class ViewDashboardTest extends TestCase
         }
     }
 
+    public function test_view_dashboard_lists_a_task_whose_expression_never_matches()
+    {
+        $this->signIn();
+        $task = Task::factory()->create(['expression' => '0 0 31 2 *']);
+        $response = $this->get(route('totem.tasks.all'));
+        $response->assertStatus(200);
+        $response->assertSee($task->description);
+    }
+
+    public function test_search_is_case_insensitive()
+    {
+        $this->signIn();
+        Task::factory()->create(['description' => 'Nightly Backup']);
+        Task::factory()->create(['description' => 'Send Reports']);
+
+        $response = $this->get(route('totem.tasks.all', ['q' => 'nIGHTLY bACKUP']));
+        $response->assertStatus(200);
+        $response->assertSee('Nightly Backup');
+        $response->assertDontSee('Send Reports');
+    }
+
+    public function test_search_with_array_query_is_ignored()
+    {
+        $this->signIn();
+        Task::factory()->create(['description' => 'Nightly Backup']);
+        Task::factory()->create(['description' => 'Send Reports']);
+
+        $response = $this->get(route('totem.tasks.all', ['q' => ['nightly']]));
+        $response->assertStatus(200);
+        $response->assertSee('Nightly Backup');
+        $response->assertSee('Send Reports');
+    }
+
     /**
      * @param  int  $task_count
      * @param  int  $result_count

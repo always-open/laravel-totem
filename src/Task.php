@@ -3,9 +3,7 @@
 namespace Studio\Totem;
 
 use Carbon\Carbon;
-use Cron\CronExpression;
 use Database\Factories\TotemTaskFactory;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
@@ -64,13 +62,11 @@ class Task extends TotemModel
     /**
      * Upcoming Accessor.
      *
-     * @return string
-     *
-     * @throws Exception
+     * Null when the task's expression never matches a calendar date.
      */
-    public function getUpcomingAttribute(): string
+    public function getUpcomingAttribute(): ?string
     {
-        return (new CronExpression($this->getCronExpression()))->getNextRunDate()->format('Y-m-d H:i:s');
+        return Totem::nextRunDate($this->getCronExpression())?->format('Y-m-d H:i:s');
     }
 
     /**
