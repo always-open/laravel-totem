@@ -18,6 +18,8 @@ import ImportButton from './tasks/components/ImportButton.vue';
 import CommandList from './tasks/components/CommandList.vue';
 import ClickToClose from './components/ClickToClose.vue';
 import UpcomingCalendar from './tasks/components/UpcomingCalendar.vue';
+import TaskSearch from './tasks/components/TaskSearch.vue';
+import TaskSearchRegion from './tasks/components/TaskSearchRegion.vue';
 
 UIkit.use(Icons);
 
@@ -34,5 +36,7 @@ app.component('task-row', TaskRow);
 app.component('click-to-close', ClickToClose);
 app.component('command-list', CommandList);
 app.component('upcoming-calendar', UpcomingCalendar);
+app.component('task-search', TaskSearch);
+app.component('task-search-region', TaskSearchRegion);
 
 app.mount('#root');
