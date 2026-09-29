@@ -1,5 +1,5 @@
 {
-  "name": "studio/laravel-totem",
+  "name": "always-open/laravel-totem",
   "description": "A Laravel package to manage your cron jobs through a beautiful dashboard",
   "keywords": [
     "laravel",
