@@ -14,7 +14,7 @@
             class="uk-display-inline uk-search uk-search-default">
             <span uk-search-icon></span>
             <input
-                value="{{ request('q') }}"
+                value="{{ is_string(request('q')) ? request('q') : '' }}"
                 placeholder="Search..."
                 name="q"
                 type="text"
