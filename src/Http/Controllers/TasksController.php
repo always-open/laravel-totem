@@ -39,7 +39,7 @@ class TasksController extends Controller
                     'average_runtime',
                 ], ['description' => 'asc'])
                 ->when(request('q'), function (Builder $query) {
-                    $query->where('description', 'LIKE', '%'.request('q').'%');
+                    $query->whereRaw('LOWER(description) LIKE ?', ['%'.mb_strtolower(request('q')).'%']);
                 })
                 ->with('frequencies')
                 ->paginate(20),
