@@ -10,16 +10,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.3', '8.4']
+        php: ['8.3', '8.4', '8.5']
         laravel: ['12.*', '13.*']
         dependencies: [prefer-lowest, prefer-stable]
         experimental: [false]
-        include:
-          # PHP 8.5 non-blocking smoke — 4 combos, all experimental
-          - { os: ubuntu-latest, php: '8.5', laravel: '12.*', dependencies: prefer-lowest,  experimental: true }
-          - { os: ubuntu-latest, php: '8.5', laravel: '12.*', dependencies: prefer-stable,  experimental: true }
-          - { os: ubuntu-latest, php: '8.5', laravel: '13.*', dependencies: prefer-lowest,  experimental: true }
-          - { os: ubuntu-latest, php: '8.5', laravel: '13.*', dependencies: prefer-stable,  experimental: true }
     name: "PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependencies }}${{ matrix.experimental && ' (experimental)' || '' }}"
 
     steps:
