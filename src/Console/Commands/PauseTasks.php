@@ -15,7 +15,6 @@ class PauseTasks extends Command
      * @var string
      */
     protected $signature = 'totem:pause
-                            {--for= : Resume automatically after this long, e.g. 30m, 2h or 1d}
                             {--until= : Resume automatically at this date and time}';
 
     /**
@@ -30,27 +29,7 @@ class PauseTasks extends Command
      */
     public function handle(): int
     {
-        if ($this->option('for') && $this->option('until')) {
-            $this->error('Use either --for or --until, not both.');
-
-            return self::FAILURE;
-        }
-
         $until = null;
-
-        if ($for = $this->option('for')) {
-            if (! preg_match('/^(\d+)([mhd])$/', $for, $matches) || (int) $matches[1] === 0) {
-                $this->error('The --for option must look like 30m, 2h or 1d.');
-
-                return self::FAILURE;
-            }
-
-            $until = match ($matches[2]) {
-                'm' => Carbon::now()->addMinutes((int) $matches[1]),
-                'h' => Carbon::now()->addHours((int) $matches[1]),
-                'd' => Carbon::now()->addDays((int) $matches[1]),
-            };
-        }
 
         if ($this->option('until')) {
             try {

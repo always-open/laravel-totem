@@ -179,9 +179,8 @@ From the dashboard, use **Pause All** at the bottom of the task list. You can pa
 The same is available from the command line:
 
 ```
-php artisan totem:pause              # until resumed
-php artisan totem:pause --for=30m    # resume automatically after 30 minutes (also accepts h and d)
-php artisan totem:pause --until="2026-10-08 09:00"
+php artisan totem:pause                              # until resumed
+php artisan totem:pause --until="2026-10-08 09:00"   # resume automatically at that time
 php artisan totem:resume
 ```
 

@@ -8,7 +8,7 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ### Added
 
-- Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--for=30m|--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration.
+- Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration.
 
 ### Fixed
 

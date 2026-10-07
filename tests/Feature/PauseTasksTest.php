@@ -198,9 +198,6 @@ class PauseTasksTest extends TestCase
     {
         Carbon::setTestNow('2026-10-07 12:00:00');
 
-        $this->artisan('totem:pause', ['--for' => '2h'])->assertSuccessful();
-        $this->assertEquals('2026-10-07 14:00:00', Pause::current()->resume_at->toDateTimeString());
-
         $this->artisan('totem:pause', ['--until' => '2026-10-09 08:00'])->assertSuccessful();
         $this->assertEquals('2026-10-09 08:00:00', Pause::current()->resume_at->toDateTimeString());
 
@@ -210,11 +207,8 @@ class PauseTasksTest extends TestCase
 
     public function test_pause_command_rejects_bad_input(): void
     {
-        $this->artisan('totem:pause', ['--for' => 'abc'])->assertFailed();
-        $this->artisan('totem:pause', ['--for' => '0m'])->assertFailed();
         $this->artisan('totem:pause', ['--until' => 'not a date'])->assertFailed();
         $this->artisan('totem:pause', ['--until' => Carbon::now()->subDay()->toDateTimeString()])->assertFailed();
-        $this->artisan('totem:pause', ['--for' => '1h', '--until' => Carbon::now()->addDay()->toDateTimeString()])->assertFailed();
 
         $this->assertNull(Pause::current());
     }
