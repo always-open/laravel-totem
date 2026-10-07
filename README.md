@@ -184,6 +184,8 @@ php artisan totem:pause --until="2026-10-08 09:00"   # resume automatically at t
 php artisan totem:resume
 ```
 
+Resume times entered on the dashboard are in the app timezone (`config('app.timezone')`), which is shown next to the field. `--until` also uses the app timezone unless you include one, for example `--until="2026-10-08 09:00 America/New_York"`.
+
 A pause with a resume time ends on its own when that time passes; no additional job is required. The pause is stored in the `schedule_pauses` table, so run `php artisan migrate` after updating.
 
 ### Screenshots

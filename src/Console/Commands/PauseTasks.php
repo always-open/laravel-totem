@@ -15,7 +15,7 @@ class PauseTasks extends Command
      * @var string
      */
     protected $signature = 'totem:pause
-                            {--until= : Resume automatically at this date and time}';
+                            {--until= : Resume automatically at this date and time, in the app timezone unless one is given}';
 
     /**
      * The console command description.
@@ -47,10 +47,10 @@ class PauseTasks extends Command
             }
         }
 
-        Pause::start($until);
+        $pause = Pause::start($until);
 
-        $this->info($until
-            ? 'Totem tasks paused until '.$until->toDateTimeString().'.'
+        $this->info($pause->resume_at
+            ? 'Totem tasks paused until '.$pause->resume_at->format('Y-m-d H:i:s T').'.'
             : 'Totem tasks paused until resumed.');
 
         return self::SUCCESS;

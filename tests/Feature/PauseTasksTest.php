@@ -4,6 +4,8 @@ namespace Studio\Totem\Tests\Feature;
 
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Pause;
 use Studio\Totem\Providers\TotemServiceProvider;
 use Studio\Totem\Result;
@@ -167,6 +169,67 @@ class PauseTasksTest extends TestCase
         }
     }
 
+    public function test_resume_ends_every_active_pause(): void
+    {
+        Pause::create(['paused_at' => Carbon::now()]);
+        Pause::create(['paused_at' => Carbon::now(), 'resume_at' => Carbon::now()->addHour()]);
+
+        $this->assertTrue(Pause::end());
+
+        $this->assertNull(Pause::current());
+        $this->assertEquals(0, Pause::query()->whereNull('resumed_at')->count());
+    }
+
+    public function test_scheduler_sees_a_pause_started_after_the_schedule_was_built(): void
+    {
+        Task::factory()->create();
+        $events = $this->scheduledEvents();
+
+        Pause::start();
+
+        foreach ($events as $event) {
+            $this->assertFalse($event->filtersPass($this->app));
+        }
+    }
+
+    public function test_scheduler_sees_a_resume_after_the_schedule_was_built(): void
+    {
+        Task::factory()->create();
+        Pause::start();
+        $events = $this->scheduledEvents();
+
+        Pause::end();
+
+        foreach ($events as $event) {
+            $this->assertTrue($event->filtersPass($this->app));
+        }
+    }
+
+    public function test_scheduler_skips_and_reports_when_the_pause_cannot_be_read(): void
+    {
+        Exceptions::fake();
+        Task::factory()->create();
+        $events = $this->scheduledEvents();
+
+        config([
+            'database.connections.unreachable' => ['driver' => 'sqlite', 'database' => '/nonexistent/totem.sqlite'],
+            'totem.database_connection' => 'unreachable',
+        ]);
+
+        foreach ($events as $event) {
+            $this->assertFalse($event->filtersPass($this->app));
+        }
+
+        Exceptions::assertReportedCount(count($events));
+    }
+
+    public function test_tasks_are_not_paused_before_the_migration_runs(): void
+    {
+        Schema::drop('schedule_pauses');
+
+        $this->assertNull(Pause::current());
+    }
+
     public function test_manual_execution_still_works_while_paused(): void
     {
         $this->signIn();
@@ -184,6 +247,7 @@ class PauseTasksTest extends TestCase
 
         $this->get(route('totem.tasks.all'))
             ->assertSee('Pause All')
+            ->assertSee('UTC')
             ->assertDontSee('All scheduled tasks are paused');
 
         Pause::start();
@@ -203,6 +267,17 @@ class PauseTasksTest extends TestCase
 
         $this->artisan('totem:pause')->assertSuccessful();
         $this->assertNull(Pause::current()->resume_at);
+    }
+
+    public function test_pause_command_converts_a_given_timezone_to_the_app_timezone(): void
+    {
+        Carbon::setTestNow('2026-10-07 12:00:00');
+
+        $this->artisan('totem:pause', ['--until' => '2026-10-08 09:00 America/New_York'])
+            ->expectsOutput('Totem tasks paused until 2026-10-08 13:00:00 UTC.')
+            ->assertSuccessful();
+
+        $this->assertEquals('2026-10-08 13:00:00', Pause::current()->resume_at->toDateTimeString());
     }
 
     public function test_pause_command_rejects_bad_input(): void

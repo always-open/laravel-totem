@@ -15,9 +15,9 @@
 @section('main-panel-before')
     <div class="uk-alert uk-alert-warning uk-flex uk-flex-between uk-flex-middle">
         <span>
-            All scheduled tasks are paused since {{ $pause->paused_at->format('Y-m-d H:i') }}
+            All scheduled tasks are paused since {{ $pause->paused_at->format('Y-m-d H:i T') }}
             &middot;
-            {{ $pause->resume_at ? 'resuming automatically at '.$pause->resume_at->format('Y-m-d H:i') : 'until resumed manually' }}
+            {{ $pause->resume_at ? 'resuming automatically at '.$pause->resume_at->format('Y-m-d H:i T') : 'until resumed manually' }}
         </span>
         <form method="POST" action="{{ route('totem.tasks.resume') }}" class="uk-margin-remove">
             @csrf
@@ -74,7 +74,8 @@
                     <option value="{{ $minutes }}" @selected(old('duration') == $minutes)>For {{ $label }}</option>
                 @endforeach
             </select>
-            <input type="datetime-local" name="until" value="{{ old('until') }}" class="uk-input uk-form-small uk-form-width-medium uk-margin-small-left" aria-label="Or resume at" title="Or resume at a specific time">
+            <input type="datetime-local" name="until" value="{{ old('until') }}" class="uk-input uk-form-small uk-form-width-medium uk-margin-small-left" aria-label="Or resume at ({{ config('app.timezone') }})" title="Or resume at a specific time ({{ config('app.timezone') }})">
+            <span class="uk-text-small uk-margin-small-left">{{ config('app.timezone') }}</span>
             <button type="submit" class="uk-button uk-button-danger uk-button-small uk-margin-small-left">Pause All</button>
         </form>
         @endunless

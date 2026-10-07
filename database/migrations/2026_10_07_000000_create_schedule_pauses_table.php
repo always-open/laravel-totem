@@ -16,7 +16,7 @@ class CreateSchedulePausesTable extends TotemMigration
         Schema::connection($this->getConnection())
             ->create($this->prefix().'schedule_pauses', function (Blueprint $table) {
                 $table->increments('id');
-                $table->timestamp('paused_at');
+                $table->timestamp('paused_at')->useCurrent();
                 $table->timestamp('resume_at')->nullable();
                 $table->timestamp('resumed_at')->nullable();
                 $table->timestamps();

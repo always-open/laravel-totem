@@ -4,7 +4,7 @@ namespace Studio\Totem;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Throwable;
+use Illuminate\Database\QueryException;
 
 /**
  * A period during which every Totem task's scheduled runs are skipped.
@@ -30,73 +30,64 @@ class Pause extends TotemModel
     ];
 
     /**
-     * Limit the query to pauses in effect at the given time.
+     * Limit the query to pauses in effect right now.
      */
-    public function scopeActive(Builder $query, ?Carbon $at = null): Builder
+    public function scopeActive(Builder $query): Builder
     {
-        $at ??= Carbon::now();
+        $now = Carbon::now();
 
         return $query->whereNull('resumed_at')
-            ->where('paused_at', '<=', $at)
-            ->where(function (Builder $query) use ($at) {
-                $query->whereNull('resume_at')->orWhere('resume_at', '>', $at);
+            ->where(function (Builder $query) use ($now) {
+                $query->whereNull('resume_at')->orWhere('resume_at', '>', $now);
             });
     }
 
     /**
      * The pause in effect right now, or null when tasks run normally.
      *
-     * Returns null when the table cannot be read, such as before the
-     * migration has run, so the scheduler keeps working.
+     * Returns null when the table does not exist yet, so the scheduler keeps
+     * working before the migration has run. Any other database error is
+     * thrown rather than read as "not paused".
      */
     public static function current(): ?self
     {
         try {
             return static::query()->active()->latest('id')->first();
-        } catch (Throwable $e) {
-            return null;
+        } catch (QueryException $e) {
+            $model = new static;
+
+            if (! $model->getConnection()->getSchemaBuilder()->hasTable($model->getTable())) {
+                return null;
+            }
+
+            throw $e;
         }
     }
 
     /**
      * Pause all tasks until the given time, or until resumed when null.
      *
-     * Calling this during a pause replaces that pause's resume time.
+     * Calling this during a pause replaces that pause's resume time. The
+     * time is converted to the app timezone first, because Eloquent stores a
+     * date's wall-clock time without converting it.
      */
     public static function start(?Carbon $until = null): self
     {
         $pause = static::current() ?? new static(['paused_at' => Carbon::now()]);
 
-        $pause->fill(['resume_at' => $until])->save();
+        $pause->fill(['resume_at' => $until?->copy()->setTimezone(config('app.timezone'))])->save();
 
         return $pause;
     }
 
     /**
-     * End the current pause. Returns false when tasks were not paused.
+     * End every pause in effect. Returns false when tasks were not paused.
+     *
+     * Two pauses started at the same moment can both be active, so all of
+     * them are ended rather than only the newest.
      */
     public static function end(): bool
     {
-        $pause = static::current();
-
-        if (is_null($pause)) {
-            return false;
-        }
-
-        $pause->fill(['resumed_at' => Carbon::now()])->save();
-
-        return true;
-    }
-
-    /**
-     * Determine whether this pause applies at the given time.
-     */
-    public function isInEffect(?Carbon $at = null): bool
-    {
-        $at ??= Carbon::now();
-
-        return is_null($this->resumed_at)
-            && $this->paused_at->lte($at)
-            && (is_null($this->resume_at) || $this->resume_at->gt($at));
+        return static::query()->active()->update(['resumed_at' => Carbon::now()]) > 0;
     }
 }

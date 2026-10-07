@@ -17,6 +17,7 @@ use Studio\Totem\Pause;
 use Studio\Totem\Repositories\EloquentTaskRepository;
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
+use Throwable;
 
 class TotemServiceProvider extends ServiceProvider
 {
@@ -116,18 +117,35 @@ class TotemServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Determine whether Totem tasks are paused, read when each run is decided.
+     *
+     * The task list comes from the cache, so tasks can still be scheduled
+     * while the database is unreachable. If the pause cannot be read, report
+     * the error and skip the task rather than run it during a possible pause.
+     */
+    protected function isPaused(): bool
+    {
+        try {
+            return Pause::current() !== null;
+        } catch (Throwable $e) {
+            report($e);
+
+            return true;
+        }
+    }
+
     public function scheduleTotemTasks(Schedule $schedule): void
     {
         $tasks = app('totem.tasks')->findAllActive();
-        $pause = Pause::current();
 
-        $tasks->each(function ($task) use ($schedule, $pause) {
+        $tasks->each(function ($task) use ($schedule) {
             $event = $schedule->command($task->command, $task->compileParameters(true));
 
             $event->cron($task->getCronExpression())
                 ->name($task->description)
                 ->timezone($task->timezone)
-                ->skip(fn () => $pause?->isInEffect() ?? false)
+                ->skip(fn () => $this->isPaused())
                 ->before(function () use ($task, $event) {
                     $event->start = microtime(true);
                     Executing::dispatch($task);
