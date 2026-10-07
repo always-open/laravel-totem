@@ -6,6 +6,10 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ## Unreleased
 
+### Added
+
+- Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--for=30m|--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration.
+
 ### Fixed
 
 - A task whose cron expression never matches a calendar date (for example `0 0 31 2 *`) no longer breaks the task list, the task view, the JSON export, or `schedule:list`. The parser throws `RuntimeException('Impossible CRON expression')` after a bounded search; `Task::$upcoming` is now `null` for such a task and every surface renders it as `Never`. The scheduler itself was never affected, since it matches the current minute rather than searching forward. `Totem::nextRunDate()` is the shared helper. (PR #419)

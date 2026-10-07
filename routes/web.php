@@ -6,6 +6,7 @@ use Studio\Totem\Http\Controllers\DashboardController;
 use Studio\Totem\Http\Controllers\ExecuteTasksController;
 use Studio\Totem\Http\Controllers\ExportTasksController;
 use Studio\Totem\Http\Controllers\ImportTasksController;
+use Studio\Totem\Http\Controllers\PauseTasksController;
 use Studio\Totem\Http\Controllers\TasksController;
 use Studio\Totem\Http\Controllers\UpcomingTasksController;
 
@@ -19,6 +20,9 @@ Route::prefix('tasks')->group(function () {
 
     Route::get('export', [ExportTasksController::class, 'index'])->name('totem.tasks.export');
     Route::post('import', [ImportTasksController::class, 'index'])->name('totem.tasks.import');
+
+    Route::post('pause', [PauseTasksController::class, 'store'])->name('totem.tasks.pause');
+    Route::delete('pause', [PauseTasksController::class, 'destroy'])->name('totem.tasks.resume');
 
     Route::get('upcoming', [UpcomingTasksController::class, 'index'])->name('totem.upcoming');
     Route::get('upcoming/events', [UpcomingTasksController::class, 'events'])->name('totem.upcoming.events');

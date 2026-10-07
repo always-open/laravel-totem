@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
+use Studio\Totem\Console\Commands\PauseTasks;
 use Studio\Totem\Console\Commands\PublishAssets;
+use Studio\Totem\Console\Commands\ResumeTasks;
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Events\Executed;
 use Studio\Totem\Events\Executing;
+use Studio\Totem\Pause;
 use Studio\Totem\Repositories\EloquentTaskRepository;
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
@@ -41,7 +44,9 @@ class TotemServiceProvider extends ServiceProvider
 
         $this->commands([
             ListSchedule::class,
+            PauseTasks::class,
             PublishAssets::class,
+            ResumeTasks::class,
         ]);
 
         $this->app->bindIf('totem.tasks', EloquentTaskRepository::class, true);
@@ -114,13 +119,15 @@ class TotemServiceProvider extends ServiceProvider
     public function scheduleTotemTasks(Schedule $schedule): void
     {
         $tasks = app('totem.tasks')->findAllActive();
+        $pause = Pause::current();
 
-        $tasks->each(function ($task) use ($schedule) {
+        $tasks->each(function ($task) use ($schedule, $pause) {
             $event = $schedule->command($task->command, $task->compileParameters(true));
 
             $event->cron($task->getCronExpression())
                 ->name($task->description)
                 ->timezone($task->timezone)
+                ->skip(fn () => $pause?->isInEffect() ?? false)
                 ->before(function () use ($task, $event) {
                     $event->start = microtime(true);
                     Executing::dispatch($task);

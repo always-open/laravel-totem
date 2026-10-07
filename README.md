@@ -170,6 +170,23 @@ Totem provides an artisan command to view a list of scheduled tasks:
 php artisan schedule:list
 ```
 
+#### Pausing All Tasks
+
+You can pause the scheduled runs of every task at once, for example during an incident or a deploy. Each task keeps its own enabled/disabled setting, so resuming puts everything back exactly as it was. Running a task manually with the Execute button still works while tasks are paused.
+
+From the dashboard, use **Pause All** at the bottom of the task list. You can pause until you resume manually, for a preset length of time, or until a specific date and time. While tasks are paused, the task list shows a notice with a **Resume** button.
+
+The same is available from the command line:
+
+```
+php artisan totem:pause              # until resumed
+php artisan totem:pause --for=30m    # resume automatically after 30 minutes (also accepts h and d)
+php artisan totem:pause --until="2026-10-08 09:00"
+php artisan totem:resume
+```
+
+A pause with a resume time ends on its own when that time passes; no additional job is required. The pause is stored in the `schedule_pauses` table, so run `php artisan migrate` after updating.
+
 ### Screenshots
 
 ##### Task List
