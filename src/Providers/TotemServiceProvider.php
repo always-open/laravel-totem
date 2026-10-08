@@ -7,13 +7,17 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Studio\Totem\Console\Commands\ListSchedule;
+use Studio\Totem\Console\Commands\PauseTasks;
 use Studio\Totem\Console\Commands\PublishAssets;
+use Studio\Totem\Console\Commands\ResumeTasks;
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Events\Executed;
 use Studio\Totem\Events\Executing;
+use Studio\Totem\Pause;
 use Studio\Totem\Repositories\EloquentTaskRepository;
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
+use Throwable;
 
 class TotemServiceProvider extends ServiceProvider
 {
@@ -41,7 +45,9 @@ class TotemServiceProvider extends ServiceProvider
 
         $this->commands([
             ListSchedule::class,
+            PauseTasks::class,
             PublishAssets::class,
+            ResumeTasks::class,
         ]);
 
         $this->app->bindIf('totem.tasks', EloquentTaskRepository::class, true);
@@ -111,6 +117,24 @@ class TotemServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Determine whether Totem tasks are paused, read when each run is decided.
+     *
+     * The task list comes from the cache, so tasks can still be scheduled
+     * while the database is unreachable. If the pause cannot be read, report
+     * the error and skip the task rather than run it during a possible pause.
+     */
+    protected function isPaused(): bool
+    {
+        try {
+            return Pause::current() !== null;
+        } catch (Throwable $e) {
+            report($e);
+
+            return true;
+        }
+    }
+
     public function scheduleTotemTasks(Schedule $schedule): void
     {
         $tasks = app('totem.tasks')->findAllActive();
@@ -121,6 +145,7 @@ class TotemServiceProvider extends ServiceProvider
             $event->cron($task->getCronExpression())
                 ->name($task->description)
                 ->timezone($task->timezone)
+                ->skip(fn () => $this->isPaused())
                 ->before(function () use ($task, $event) {
                     $event->start = microtime(true);
                     Executing::dispatch($task);

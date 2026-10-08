@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Studio\Totem\Contracts\TaskInterface;
+use Studio\Totem\Http\Requests\PauseRequest;
 use Studio\Totem\Http\Requests\TaskRequest;
+use Studio\Totem\Pause;
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
 
@@ -45,6 +47,8 @@ class TasksController extends Controller
                 })
                 ->with('frequencies')
                 ->paginate(20),
+            'pause' => Pause::current(),
+            'durations' => PauseRequest::DURATIONS,
         ]);
     }
 
