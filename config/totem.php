@@ -219,6 +219,9 @@ return [
     'web' => [
         'middleware' => env('TOTEM_WEB_MIDDLEWARE', 'web'),
         'route_prefix' => env('TOTEM_WEB_ROUTE_PREFIX', 'totem'),
+        // localStorage key holding the dashboard's light / dark / system choice.
+        // Set it to 'theme' to share the preference with Filament's theme switcher.
+        'theme_storage_key' => env('TOTEM_THEME_STORAGE_KEY', 'totem-theme'),
     ],
     'table_prefix' => env('TOTEM_TABLE_PREFIX', ''),
     'artisan' => [

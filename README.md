@@ -80,6 +80,18 @@ Totem::auth(function($request) {
 
 By default Totem's dashboard only works in the local environment. To view the dashboard point your browser to `/totem` of your app.
 
+##### Dark Mode
+
+The dashboard sidebar has a theme switcher with three options: **Light**, **Dark**, and **Browser default**, which follows the operating system's setting. Browser default is the starting choice. The choice is remembered in the browser's `localStorage` under the key `totem-theme`.
+
+To use a different key, set `TOTEM_THEME_STORAGE_KEY` (config `totem.web.theme_storage_key`). Filament's theme switcher stores the same values (`light`, `dark`, `system`) under the key `theme`, so a Filament app can share one preference between its panels and Totem:
+
+```
+TOTEM_THEME_STORAGE_KEY=theme
+```
+
+The dark theme ships as `public/vendor/totem/css/dark.css`. If you published Totem's assets before updating, run `php artisan totem:assets` to publish it.
+
 ##### Table Prefix
 
 Totem's tables use generic names which may conflict with existing tables in a project. To alleviate this the `.env` param `TOTEM_TABLE_PREFIX` can be set which will apply a prefix to all of Totem's tables and their models.

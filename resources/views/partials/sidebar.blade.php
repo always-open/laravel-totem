@@ -19,4 +19,9 @@
         </li>
     </ul>
     <hr>
+    <div class="totem-theme-switcher" role="group" aria-label="Theme">
+        <button type="button" class="uk-button uk-button-small" data-totem-theme="light">Light</button>
+        <button type="button" class="uk-button uk-button-small" data-totem-theme="dark">Dark</button>
+        <button type="button" class="uk-button uk-button-small" data-totem-theme="system">Browser default</button>
+    </div>
 </aside>

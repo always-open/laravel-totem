@@ -1,0 +1,367 @@
+/*
+ * Totem dark theme and theme switcher
+ *
+ * Loaded after the compiled UIkit theme (app.css) and components.css. Every
+ * dark rule is prefixed with `html.dark`, which out-specifies the package rule
+ * it overrides (an `!important` original is overridden with `!important`); the
+ * Upcoming calendar rules omit the component's `[data-v-…]` scope attribute and
+ * still win on specificity. Outside the theme switcher, light mode renders the
+ * package CSS untouched. `html.dark` is set by resources/assets/js/theme.js.
+ *
+ * Dark mode uses a neutral gray ramp, with Totem's own blue for links and
+ * accents. The switcher's light-mode colors are Totem's (#dee6ed border,
+ * #5872b5 accent).
+ */
+
+/* Theme switcher, both modes */
+
+.totem-theme-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.totem-theme-switcher .uk-button {
+    border: 1px solid #dee6ed;
+    padding: 0 10px;
+}
+
+html.dark .totem-theme-switcher .uk-button {
+    border-color: #404040;
+    color: #d4d4d4;
+}
+
+html[data-theme-preference='light'] .totem-theme-switcher [data-totem-theme='light'],
+html[data-theme-preference='dark'] .totem-theme-switcher [data-totem-theme='dark'],
+html[data-theme-preference='system'] .totem-theme-switcher [data-totem-theme='system'] {
+    background-color: #5872b5;
+    border-color: #5872b5;
+    color: #fff;
+}
+
+/* Page and typography */
+
+html.dark {
+    color-scheme: dark;
+    background: #0a0a0a;
+    color: #d4d4d4;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark .uk-h1,
+html.dark .uk-h2,
+html.dark .uk-h3,
+html.dark .uk-h4,
+html.dark .uk-h5,
+html.dark .uk-h6,
+html.dark .uk-text-large,
+html.dark blockquote {
+    color: #fafafa;
+}
+
+html.dark a:not([class]),
+html.dark .uk-link,
+html.dark .uk-button-link {
+    color: #7d9cec;
+}
+
+html.dark a:not([class]):hover,
+html.dark .uk-link:hover,
+html.dark .uk-button-link:focus,
+html.dark .uk-button-link:hover {
+    color: #a3b8f2;
+}
+
+html.dark .uk-text-muted {
+    color: #a3a3a3 !important;
+}
+
+html.dark .uk-text-meta,
+html.dark .uk-text-meta a {
+    color: #a3a3a3;
+}
+
+html.dark .uk-text-emphasis {
+    color: #fafafa !important;
+}
+
+html.dark .uk-hr,
+html.dark hr {
+    border-top-color: #404040;
+}
+
+html.dark pre {
+    background: #171717;
+    border-color: #404040;
+    color: #e5e5e5;
+}
+
+html.dark .uk-divider-icon::before,
+html.dark .uk-divider-icon::after {
+    border-bottom-color: #404040;
+}
+
+/* Sidebar */
+
+/* The Totem logo is a dark-stroked <img>, which CSS color cannot recolor. */
+html.dark aside img.uk-svg {
+    filter: invert(1);
+}
+
+html.dark .uk-nav-default > li > a {
+    color: #a3a3a3;
+}
+
+html.dark .uk-nav-default > li > a:hover,
+html.dark .uk-nav-default > li > a:focus,
+html.dark .uk-nav-default > li.uk-active > a {
+    color: #fafafa;
+}
+
+/* Cards */
+
+html.dark .uk-card-default {
+    background: #171717;
+    background-image: none;
+    color: #d4d4d4;
+    box-shadow: 0 0 0 1px #262626;
+}
+
+html.dark .uk-card-default .uk-card-title {
+    color: #fafafa;
+}
+
+html.dark .uk-card-default .uk-card-header {
+    border-bottom-color: #404040;
+}
+
+html.dark .uk-card-default .uk-card-footer {
+    border-top-color: #404040;
+}
+
+/* Tables and lists */
+
+html.dark .uk-table th,
+html.dark .uk-table caption {
+    color: #a3a3a3;
+}
+
+html.dark .uk-table-divider > :first-child > tr:not(:first-child),
+html.dark .uk-table-divider > :not(:first-child) > tr,
+html.dark .uk-table-divider > tr:not(:first-child) {
+    border-top-color: #404040;
+}
+
+html.dark .uk-table-striped tbody tr:nth-of-type(odd),
+html.dark .uk-table-striped > tr:nth-of-type(odd),
+html.dark .uk-list-striped > li:nth-of-type(odd) {
+    background: #262626;
+}
+
+html.dark .uk-table tbody tr.uk-active,
+html.dark .uk-table-hover tbody tr:hover,
+html.dark .uk-table-hover > tr:hover,
+html.dark .uk-table > tr.uk-active {
+    background: #404040;
+}
+
+/* Forms */
+
+html.dark .uk-form-label {
+    color: #e5e5e5;
+}
+
+html.dark .uk-input,
+html.dark .uk-select,
+html.dark .uk-textarea {
+    background-color: #262626;
+    border-color: #404040;
+    color: #fafafa;
+}
+
+html.dark .uk-input:focus,
+html.dark .uk-select:focus,
+html.dark .uk-textarea:focus {
+    background-color: #262626;
+    border-color: #7d9cec !important;
+    color: #fafafa;
+    box-shadow: none;
+}
+
+html.dark .uk-input:disabled,
+html.dark .uk-select:disabled,
+html.dark .uk-textarea:disabled {
+    background-color: #171717;
+    border-color: #404040 !important;
+    color: #737373;
+}
+
+html.dark .uk-input::placeholder,
+html.dark .uk-textarea::placeholder,
+html.dark .uk-search-input::placeholder {
+    color: #737373;
+}
+
+/* UIkit draws the select chevron as a dark SVG background; repaint it light. */
+html.dark .uk-select:not([multiple]):not([size]),
+html.dark .uk-select:not([multiple]):not([size]):disabled {
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='16' viewBox='0 0 24 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon fill='%23d4d4d4' points='12 1 9 6 15 6'/%3E%3Cpolygon fill='%23d4d4d4' points='12 13 9 8 15 8'/%3E%3C/svg%3E");
+}
+
+html.dark .uk-select:not([multiple]):not([size]) option {
+    background-color: #262626;
+    color: #fafafa;
+}
+
+html.dark .uk-search-input {
+    color: #fafafa;
+}
+
+html.dark .uk-search .uk-search-icon {
+    color: #a3a3a3;
+}
+
+html.dark .uk-search-default .uk-search-input {
+    border-color: #404040;
+}
+
+html.dark .uk-search-default .uk-search-input:focus {
+    background-color: #262626;
+    border-color: #7d9cec;
+}
+
+/* Buttons */
+
+html.dark .uk-button-default {
+    background-color: #262626;
+    color: #fafafa;
+    box-shadow: none;
+}
+
+html.dark .uk-button-default:focus,
+html.dark .uk-button-default:hover {
+    background-color: #404040;
+    color: #fafafa;
+    box-shadow: none;
+}
+
+html.dark .uk-button-secondary {
+    border-color: #7d9cec;
+    color: #7d9cec;
+}
+
+html.dark .uk-button-secondary:focus,
+html.dark .uk-button-secondary:hover {
+    border-color: #a3b8f2;
+    color: #a3b8f2;
+}
+
+html.dark .uk-button-danger:focus,
+html.dark .uk-button-danger:hover {
+    border-color: #e98385;
+    color: #e98385;
+}
+
+html.dark .uk-button-danger:disabled,
+html.dark .uk-button-default:disabled,
+html.dark .uk-button-primary:disabled,
+html.dark .uk-button-secondary:disabled {
+    color: #737373;
+}
+
+html.dark .uk-close {
+    color: #a3a3a3;
+}
+
+html.dark .uk-close:focus,
+html.dark .uk-close:hover {
+    color: #fafafa;
+}
+
+/* Alerts */
+
+html.dark .uk-alert,
+html.dark .uk-alert-primary,
+html.dark .uk-alert-success,
+html.dark .uk-alert-warning,
+html.dark .uk-alert-danger {
+    background: #171717;
+    box-shadow: 0 0 0 1px #262626;
+}
+
+html.dark .uk-alert {
+    color: #e5e5e5;
+}
+
+html.dark .uk-alert-primary {
+    color: #7d9cec;
+}
+
+html.dark .uk-alert-success {
+    color: #4bc78f;
+}
+
+html.dark .uk-alert-warning {
+    color: #f7c77d;
+}
+
+html.dark .uk-alert-danger {
+    color: #d95e60;
+}
+
+/* Modals */
+
+html.dark .uk-modal-dialog,
+html.dark .uk-modal-header,
+html.dark .uk-modal-footer {
+    background: #171717;
+    color: #d4d4d4;
+}
+
+html.dark .uk-modal-header {
+    border-bottom-color: #404040;
+}
+
+html.dark .uk-modal-footer {
+    border-top-color: #404040;
+}
+
+/* Pagination */
+
+html.dark .uk-pagination > * > * {
+    color: #a3a3a3;
+}
+
+html.dark .uk-pagination > * > :focus,
+html.dark .uk-pagination > * > :hover,
+html.dark .uk-pagination > .uk-active > * {
+    background-color: #262626;
+    color: #fafafa;
+    box-shadow: none;
+}
+
+/* Upcoming calendar (Totem's UpcomingCalendar component) */
+
+html.dark .totem-calendar,
+html.dark .totem-calendar__time-label,
+html.dark .totem-calendar__cell {
+    border-color: #404040;
+}
+
+html.dark .totem-calendar__time-label {
+    color: #a3a3a3;
+}
+
+html.dark .totem-calendar__time-label--header,
+html.dark .totem-calendar__day-header {
+    background: #262626;
+    border-right-color: #404040;
+    color: #fafafa;
+}
