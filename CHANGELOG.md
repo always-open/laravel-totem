@@ -4,12 +4,46 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ---
 
-## Unreleased
+## v13.4.0 - 10/13/2026
 
 ### Added
 
-- Dark mode for the dashboard. A theme switcher in the sidebar offers **Light**, **Dark**, and **Browser default** (follows the operating system, and is the starting choice). The choice is stored in the browser's `localStorage` under `totem.web.theme_storage_key` (`TOTEM_THEME_STORAGE_KEY`, default `totem-theme`); set it to `theme` to share the preference with Filament's theme switcher. The theme applies before first paint. Re-publish assets with `php artisan totem:assets` to get the new `css/dark.css`.
-- Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration.
+- Dark mode for the dashboard. A theme switcher in the sidebar offers **Light**, **Dark**, and **Browser default** (follows the operating system, and is the starting choice). The choice is stored in the browser's `localStorage` under `totem.web.theme_storage_key` (`TOTEM_THEME_STORAGE_KEY`, default `totem-theme`); set it to `theme` to share the preference with Filament's theme switcher. The theme applies before first paint. Re-publish assets with `php artisan totem:assets` to get the new `css/dark.css`. (PR #425)
+
+## v13.3.0 - 10/08/2026
+
+### Added
+
+- Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration. (PR #424)
+
+## v13.2.0 - 10/01/2026
+
+### Changed
+
+- CI tests PHP 8.5, and its jobs are required to pass. (PR #423)
+
+## v13.1.1 - 09/29/2026
+
+### Changed
+
+- The Composer package is renamed from `studio/laravel-totem` to `always-open/laravel-totem`. Update the name in your `composer.json`; the `Studio\Totem` PHP namespace is unchanged.
+
+## v13.1.0 - 09/29/2026
+
+Brings the v12.1.0 changes to 13.x. (PR #422)
+
+## v13.0.0 - 05/11/2026
+
+### Changed
+
+- Adds Laravel 13 support and drops Laravel 10 and 11. Requires PHP 8.3 or later. (PR #417)
+
+## v12.1.0 - 09/29/2026
+
+### Changed
+
+- Task search is case-insensitive. (PR #420)
+- The task list searches as you type. (PR #421)
 
 ### Fixed
 
