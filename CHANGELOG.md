@@ -8,6 +8,7 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ### Added
 
+- Dark mode for the dashboard. A theme switcher in the sidebar offers **Light**, **Dark**, and **Browser default** (follows the operating system, and is the starting choice). The choice is stored in the browser's `localStorage` under `totem.web.theme_storage_key` (`TOTEM_THEME_STORAGE_KEY`, default `totem-theme`); set it to `theme` to share the preference with Filament's theme switcher. The theme applies before first paint. Re-publish assets with `php artisan totem:assets` to get the new `css/dark.css`.
 - Pause the scheduled runs of all tasks at once, from the task list (**Pause All** / **Resume**) or with `php artisan totem:pause [--until=...]` and `php artisan totem:resume`. A pause can resume automatically after a set time. Each task's own enabled/disabled setting is left untouched, and manual execution still works while paused. Requires the new `schedule_pauses` migration.
 
 ### Fixed

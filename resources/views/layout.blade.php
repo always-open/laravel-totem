@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-totem-theme-key="{{ config('totem.web.theme_storage_key', 'totem-theme') }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,8 +12,10 @@
             Totem
             @yield('page-title')
         </title>
+        <script>{!! \Studio\Totem\Totem::themeScript() !!}</script>
         <link rel="stylesheet" type="text/css" href="{{ asset('/vendor/totem/css/app.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/vendor/totem/css/components.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('/vendor/totem/css/dark.css') }}">
         @stack('style')
     </head>
     <body>

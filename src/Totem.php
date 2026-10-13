@@ -112,6 +112,15 @@ class Totem
         }
     }
 
+    /**
+     * The dashboard's theme script, inlined into the layout's <head> so the
+     * stored light / dark / system preference applies before first paint.
+     */
+    public static function themeScript(): string
+    {
+        return file_get_contents(__DIR__.'/../resources/assets/js/theme.js');
+    }
+
     public static function isEnabled(): bool
     {
         try {

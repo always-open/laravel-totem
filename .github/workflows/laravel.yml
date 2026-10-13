@@ -3,6 +3,25 @@ name: Laravel
 on: [push, pull_request]
 
 jobs:
+  js-tests:
+    runs-on: ubuntu-latest
+    name: "JS tests (Vitest)"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        # package-lock.json is not committed, so this resolves within package.json's ranges.
+        run: npm install --no-audit --no-fund
+
+      - name: Execute tests (Vitest)
+        run: npm test
+
   laravel-tests:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental == true }}
