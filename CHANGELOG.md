@@ -4,6 +4,27 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ---
 
+## Unreleased
+
+### Added
+
+- A **Run once** page runs one Artisan command a single time, with arguments, without creating a task. It shows the command's output, exit code, and whether it succeeded, and keeps a history of every run with who ran it, when, and for how long. Only commands allowed by `totem.artisan.command_filter` can be run, and access uses the same `Totem::auth` check as the rest of the dashboard. The command runs inside the web request, so long work should stay a scheduled task. (PR #TBD)
+
+### Upgrading
+
+- Run `php artisan migrate` to create the new `one_off_command_runs` table.
+- Run `php artisan totem:assets` to re-publish `css/dark.css`, which now styles the run status labels in both themes.
+- If you override `resources/views/vendor/totem/partials/sidebar.blade.php`, add the **Run once** item after **Upcoming**:
+
+  ```blade
+  <li class="{{ request()->routeIs('totem.one-off-runs.*') ? 'uk-active' : '' }}">
+      <a href="{{ route('totem.one-off-runs.index') }}" class="uk-flex uk-flex-middle">
+          <span uk-icon="icon: play-circle; ratio: 1" class="uk-visible@m uk-margin-small-right"></span>
+          <span class="uk-vertical-align-middle">Run once</span>
+      </a>
+  </li>
+  ```
+
 ## v13.4.0 - 10/13/2026
 
 ### Added

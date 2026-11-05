@@ -17,6 +17,12 @@
                 <span class="uk-vertical-align-middle">Upcoming</span>
             </a>
         </li>
+        <li class="{{ request()->routeIs('totem.one-off-runs.*') ? 'uk-active' : '' }}">
+            <a href="{{ route('totem.one-off-runs.index') }}" class="uk-flex uk-flex-middle">
+                <span uk-icon="icon: play-circle; ratio: 1" class="uk-visible@m uk-margin-small-right"></span>
+                <span class="uk-vertical-align-middle">Run once</span>
+            </a>
+        </li>
     </ul>
     <hr>
     <div class="totem-theme-switcher" role="group" aria-label="Theme">

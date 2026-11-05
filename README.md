@@ -200,6 +200,18 @@ Resume times entered on the dashboard are in the app timezone (`config('app.time
 
 A pause with a resume time ends on its own when that time passes; no additional job is required. The pause is stored in the `schedule_pauses` table, so run `php artisan migrate` after updating.
 
+#### Running a Command Once
+
+The **Run once** page in the sidebar runs one Artisan command a single time, without creating a task. Pick a command, type its arguments, and select **Run**. When it finishes, Totem shows everything the command printed, its exit code, and whether it succeeded (exit code `0`) or failed (any other exit code, or an exception). Every run is kept in a history on the same page, newest first, with who ran it, when, and for how long.
+
+Only the commands Totem offers for tasks can be run, so the [command filter](#filter-commands-dropdown) (`totem.artisan.command_filter` and `totem.artisan.whitelist`) controls this page too. Access uses the same `Totem::auth` check as the rest of the dashboard.
+
+Arguments use the same syntax as on the command line, for example `--org=7 --dry-run`. An option given without a value, such as `--org`, reaches the command as `null` rather than `true`. The command runs non-interactively, so `confirm()` and `ask()` take their defaults.
+
+The command runs inside the web request. A command that takes longer than the request time limit times out, so schedule long work as a task instead. Output written through the command's output methods (`$this->info()`, `$this->error()`, `$this->line()`, `$this->table()` and so on) is captured; `echo`, `dump()` and direct writes to `STDERR` are not.
+
+Runs are stored in the `one_off_command_runs` table, so run `php artisan migrate` after updating. The history is never pruned automatically.
+
 ### Screenshots
 
 ##### Task List
