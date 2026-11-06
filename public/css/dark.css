@@ -1,12 +1,13 @@
 /*
- * Totem dark theme and theme switcher
+ * Totem dark theme, theme switcher and one-off run status labels
  *
  * Loaded after the compiled UIkit theme (app.css) and components.css. Every
  * dark rule is prefixed with `html.dark`, which out-specifies the package rule
  * it overrides (an `!important` original is overridden with `!important`); the
  * Upcoming calendar rules omit the component's `[data-v-…]` scope attribute and
- * still win on specificity. Outside the theme switcher, light mode renders the
- * package CSS untouched. `html.dark` is set by resources/assets/js/theme.js.
+ * still win on specificity. Outside the theme switcher and the run status
+ * labels (classes only the Run once pages use), light mode renders the package
+ * CSS untouched. `html.dark` is set by resources/assets/js/theme.js.
  *
  * Dark mode uses a neutral gray ramp, with Totem's own blue for links and
  * accents. The switcher's light-mode colors are Totem's (#dee6ed border,
@@ -364,4 +365,28 @@ html.dark .totem-calendar__day-header {
     background: #262626;
     border-right-color: #404040;
     color: #fafafa;
+}
+
+/* One-off run status labels, both modes. UIkit's uk-label-success/-danger put
+   white text on a mid green or red (about 2:1); these tints keep the label
+   readable in each theme. */
+
+.totem-run-status-succeeded {
+    background-color: #dcf3e6;
+    color: #1b5e3f;
+}
+
+.totem-run-status-failed {
+    background-color: #fbe3e3;
+    color: #8f2a2c;
+}
+
+html.dark .totem-run-status-succeeded {
+    background-color: #173d2b;
+    color: #8ee0b5;
+}
+
+html.dark .totem-run-status-failed {
+    background-color: #4a1d1e;
+    color: #f4a9aa;
 }

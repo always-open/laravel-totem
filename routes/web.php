@@ -6,6 +6,7 @@ use Studio\Totem\Http\Controllers\DashboardController;
 use Studio\Totem\Http\Controllers\ExecuteTasksController;
 use Studio\Totem\Http\Controllers\ExportTasksController;
 use Studio\Totem\Http\Controllers\ImportTasksController;
+use Studio\Totem\Http\Controllers\OneOffCommandRunsController;
 use Studio\Totem\Http\Controllers\PauseTasksController;
 use Studio\Totem\Http\Controllers\TasksController;
 use Studio\Totem\Http\Controllers\UpcomingTasksController;
@@ -38,4 +39,10 @@ Route::prefix('tasks')->group(function () {
     Route::delete('status/{totemTask}', [ActiveTasksController::class, 'destroy'])->name('totem.task.deactivate');
 
     Route::get('{totemTask}/execute', [ExecuteTasksController::class, 'index'])->name('totem.task.execute');
+});
+
+Route::prefix('one-off-runs')->name('totem.one-off-runs.')->group(function () {
+    Route::get('/', [OneOffCommandRunsController::class, 'index'])->name('index');
+    Route::post('/', [OneOffCommandRunsController::class, 'store'])->name('store');
+    Route::get('{run}', [OneOffCommandRunsController::class, 'show'])->whereNumber('run')->name('show');
 });
