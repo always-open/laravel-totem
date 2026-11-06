@@ -8,7 +8,7 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ### Added
 
-- A **Run once** page runs one Artisan command a single time, with arguments, without creating a task. It shows the command's output, exit code, and whether it succeeded, and keeps a history of every run with who ran it, when, and for how long. Only commands allowed by `totem.artisan.command_filter` can be run, and access uses the same `Totem::auth` check as the rest of the dashboard. The command runs inside the web request, so long work should stay a scheduled task. (PR #TBD)
+- A **Run once** page runs one Artisan command a single time, with arguments, without creating a task. It shows the command's output, exit code, and whether it succeeded, and keeps a history of every run with who ran it, when, and for how long. Only commands allowed by `totem.artisan.command_filter` can be run, and access uses the same `Totem::auth` check as the rest of the dashboard. The command runs inside the web request, so long work should stay a scheduled task. (PR #428)
 
 ### Upgrading
 
