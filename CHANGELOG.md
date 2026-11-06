@@ -4,7 +4,7 @@ This project follows [Semantic Versioning](CONTRIBUTING.md).
 
 ---
 
-## Unreleased
+## v13.5.0 - 11/06/2026
 
 ### Added
 
